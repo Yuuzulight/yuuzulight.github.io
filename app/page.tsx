@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
+import { ArrowRight, ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 
 import { projects } from "@/content/projects";
 import { about, experience, site, skillGroups } from "@/content/site";
@@ -208,18 +208,35 @@ export default function Home() {
                     ) : null}
 
                     {entry.href ? (
-                      <Link
-                        href={entry.href}
-                        className="group mt-5 inline-flex min-h-11 items-center gap-1.5 font-display text-[0.9rem] font-medium text-accent"
-                      >
-                        Read the full write-up
-                        <ArrowRight
-                          size={14}
-                          weight="bold"
-                          aria-hidden
-                          className="transition-transform duration-500 ease-soft group-hover:translate-x-1"
-                        />
-                      </Link>
+                      entry.href.startsWith("http") ? (
+                        <a
+                          href={entry.href}
+                          target="_blank"
+                          rel="noreferrer noopener"
+                          className="group mt-5 inline-flex min-h-11 items-center gap-1.5 font-display text-[0.9rem] font-medium text-accent"
+                        >
+                          {entry.linkLabel ?? "Read the full write-up"}
+                          <ArrowUpRight
+                            size={14}
+                            weight="bold"
+                            aria-hidden
+                            className="transition-transform duration-500 ease-soft group-hover:translate-x-0.5 group-hover:-translate-y-px"
+                          />
+                        </a>
+                      ) : (
+                        <Link
+                          href={entry.href}
+                          className="group mt-5 inline-flex min-h-11 items-center gap-1.5 font-display text-[0.9rem] font-medium text-accent"
+                        >
+                          {entry.linkLabel ?? "Read the full write-up"}
+                          <ArrowRight
+                            size={14}
+                            weight="bold"
+                            aria-hidden
+                            className="transition-transform duration-500 ease-soft group-hover:translate-x-1"
+                          />
+                        </Link>
+                      )
                     ) : null}
                   </div>
                 </li>

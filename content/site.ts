@@ -88,6 +88,8 @@ export type ExperienceEntry = {
   body?: string;
   tags?: string[];
   href?: string;
+  /** Defaults to the internal write-up wording. */
+  linkLabel?: string;
 };
 
 export const experience: ExperienceEntry[] = [
@@ -103,8 +105,12 @@ export const experience: ExperienceEntry[] = [
   {
     kind: "role",
     period: "2019",
-    title: "Internship",
-    org: "CHESS",
+    title: "Intern",
+    org: "Centre for Healthy and Sustainable Cities, NTU",
+    body: "Built Xbox Kinect games that get older adults exercising, for I-SING, the International-Singapore Intergenerational National Games. I-SING is an exergaming programme run with Senior Activity Centres across Singapore, studying whether game-based exercise improves physical health, cognitive function and social wellbeing in adults aged 65 and over. The competition had gone international the year before I joined, with participants in Finland, France, Japan and Taiwan. Designing for this audience is its own problem: the input has to tolerate slow, small and imprecise movement, and the game has to stay legible to someone who has never held a controller.",
+    tags: ["Xbox Kinect", "Motion tracking"],
+    href: "https://www.ntu.edu.sg/arise/research-focus/gerontechnology-for-active-ageing/international-singapore-intergenerational-national-games-(i-sing)",
+    linkLabel: "About the I-SING programme",
   },
   {
     kind: "education",
