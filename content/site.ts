@@ -97,7 +97,7 @@ export const experience: ExperienceEntry[] = [
   {
     kind: "role",
     period: "2026",
-    title: "Data engineer, placement",
+    title: "Data Engineering Intern",
     org: "Worldtech",
     body: "Worked on a guest messaging platform that hotels use to handle conversations across several channels from one place. My work covered the data layer, the retrieval integration behind suggested replies, and the operational screens staff use day to day. Everything shipped as reviewed pull requests into a team codebase that was already in production with paying clients.",
     tags: ["Next.js", "TypeScript", "PostgreSQL", "Azure AI Search", "RAG"],
@@ -106,7 +106,7 @@ export const experience: ExperienceEntry[] = [
   {
     kind: "role",
     period: "2019",
-    title: "Intern",
+    title: "Game Art Intern",
     org: "Centre for Healthy and Sustainable Cities, NTU",
     body: "Built Xbox Kinect games that get older adults exercising, for I-SING, the International-Singapore Intergenerational National Games. I-SING is an exergaming programme run with Senior Activity Centres across Singapore, studying whether game-based exercise improves physical health, cognitive function and social wellbeing in adults aged 65 and over. The competition had gone international the year before I joined, with participants in Finland, France, Japan and Taiwan. Designing for this audience is its own problem: the input has to tolerate slow, small and imprecise movement, and the game has to stay legible to someone who has never held a controller.",
     tags: ["Xbox Kinect", "Motion tracking"],
