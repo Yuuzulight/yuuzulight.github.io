@@ -1,39 +1,39 @@
 ---
 title: The dtype that was not there
 date: 2026-08-18
-summary: Five hypotheses in a row failed to explain a NaN training loss. The cause was a config flag that never controlled the thing it claimed to.
+summary: I burned hours fixing hyperparameters that were never the problem, because the actual bug was a dtype the training config never controlled in the first place.
 tags: ["debugging", "pytorch", "veritarach"]
 draft: false
 ---
 
-Training loss went to NaN almost immediately. Not after a few hundred steps, not on a
-particular batch. Immediately, and every time.
+Training loss went NaN by step 50, the very first step that got logged, and it did that
+every single time I ran the job.
 
-I had a reasonable list of suspects, and I worked through it in order. The precision
-setting in the training config. Learning rate warmup. Dataloader workers. The attention
-implementation. Each one was plausible, each one had a story attached about why it would
-produce exactly this failure, and each one was wrong.
+I went through the obvious stuff first. Checked the precision setting in the training
+config. Messed with the learning rate warmup. Turned off the dataloader workers, in case
+something was racing. Forced the attention implementation to a plainer one. None of it
+changed anything. Same NaN, same step, every time, which honestly should have told me
+something a lot sooner than it did.
 
-What all five had in common is that I was reading configuration and reasoning about what
-it implied. The config said bf16. So the model was in bf16, and the problem must be
-somewhere else. That inference felt so obviously safe that I never checked it.
+What all of that had in common: I was trusting the config instead of checking what the
+model was actually doing. The training args said bf16, so in my head the model was running
+in bf16, and I went looking for the bug everywhere except there.
 
-The model was in float16. `from_pretrained()` had loaded the weights in half precision,
-independently of the training flag that was supposed to control precision. The two settings
-looked like they described the same thing, and they did not. Half precision has a much
-smaller range than bfloat16, the intermediate values overflowed, and the loss went to NaN
-on the first step.
+Wrong. HuggingFace's `from_pretrained()` had loaded the checkpoint in float16, completely
+separate from the bf16 flag I had set. Turns out that flag only controls autocast during
+the actual compute, not what dtype the weights get loaded in. Float16 has way less range
+than bf16, so things overflowed almost immediately and the loss collapsed to NaN on the
+first logged step.
 
-I found it by printing the dtype of a loaded tensor. That is the entire diagnostic. One
-line, after some hours of building increasingly elaborate theories about optimiser state.
+I only found this by printing `model.classifier.bias.dtype` after loading it and looking at
+what came back. `torch.float16`. One line, after a few hours of guessing.
 
-The fix was a single explicit parameter. What stayed with me is the shape of the mistake,
-because it is not really about precision or about PyTorch. Every one of my five hypotheses
-was a guess about runtime behaviour, checked against configuration rather than against the
-runtime. Configuration is a statement of intent. It is a request. Whether the request was
-honoured is a separate question, and on that day the answer was no, silently, with no
-warning printed anywhere.
+The fix is one keyword argument: pass `dtype=torch.float32` to `from_pretrained()` and it's
+gone. The whole debugging session, including every failed attempt, cost about ninety cents
+on a rented GPU, which is somehow the least annoying part of this story.
 
-Now when something behaves impossibly, the first thing I do is ask the running program what
-it actually is, rather than asking the config what it was told to be. It is a slower first
-step and it has saved me considerably more time than it costs.
+The part that actually stuck with me isn't the PyTorch specifics, it's that I spent hours
+reasoning about what the config *said* instead of just checking what the program was
+*doing*. The config is a request, not a guarantee, and nothing warned me it hadn't been
+honoured. Now if something is behaving like it shouldn't be possible, I check the real
+state first, before I touch a single hyperparameter.
