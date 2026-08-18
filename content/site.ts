@@ -146,13 +146,13 @@ export const updates: Update[] = [
   },
   {
     date: "2026-08-17",
-    text: "Veracia's independent holdout found that the text detector under-flags AI writing outside its training data, which is now documented on its own page rather than buried.",
-    href: "/work/veritarach/",
+    text: "Veracia's independent holdout found that the text detector under-flags AI writing outside its training data, which turned out to trace back to a checkpoint that never converged.",
+    href: "/blog/the-checkpoint-that-was-quietly-guessing/",
   },
   {
     date: "2026-08-17",
     text: "Hecate's forecast job produced its first clean run after a container image tag mismatch had been silently skipping it.",
-    href: "/work/hecate/",
+    href: "/blog/the-forecast-gate-i-almost-got-wrong/",
   },
   {
     date: "2026-08-16",
