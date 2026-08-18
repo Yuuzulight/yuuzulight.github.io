@@ -73,7 +73,8 @@ export const skillGroups: SkillGroup[] = [
 ];
 
 export const about = [
-  "I just finished a BSc in Data Science at James Cook University, and spent my placement as a data engineer on a hotel messaging platform that real hotels use every day. That was the first time my code had users who had no idea I existed, which changes how you think about a schema migration.",
+  "I came to this from game design. My diploma was mostly art and production, but there was coding in it, and that turned out to be the part I wanted to keep doing. I had always been good with numbers, and I had been interested in code since I was young, so I took the chance and went back for a data science degree.",
+  "The placement at the end of that degree put me on a hotel messaging platform that real hotels use every day. That was the first time my code had users who had no idea I existed, which changes how you think about a schema migration.",
   "Most of what I build outside work comes from wanting a thing to exist. A tracker that could tell me which projects were actually gaining ground. A voice tool that gives useful feedback without a clinical appointment. An assistant that runs on my own machine. They are all small enough to finish and complicated enough to teach me something.",
   "The habit I care most about is checking my own results. On the text detector I built a second, separate evaluation harness specifically to try to break the first one, and it worked, which was annoying and much more useful than the original score. I would rather find that myself than have a reviewer find it for me.",
 ];
