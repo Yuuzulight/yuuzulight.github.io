@@ -30,6 +30,7 @@ const displayOrder = [
   "hotel-guest-messaging",
   "euphonia",
   "data-artisan",
+  "argos",
 ];
 
 const rank = (slug: string) => {
@@ -45,6 +46,7 @@ const layout: Record<string, { span: string; tone: CardTone }> = {
   "hotel-guest-messaging": { span: "lg:col-span-2", tone: "plain" },
   euphonia: { span: "lg:col-span-3", tone: "tinted" },
   "data-artisan": { span: "lg:col-span-3", tone: "plain" },
+  argos: { span: "lg:col-span-3", tone: "plain" },
 };
 
 const personSchema = {
@@ -228,7 +230,7 @@ export default function Home() {
         >
           <Reveal>
             <h2 className="max-w-[20ch] font-display text-3xl font-semibold tracking-tight sm:text-4xl">
-              Things I have built, and what each one taught me.
+              Things I build, and what each one teaches me.
             </h2>
             <p className="mt-4 max-w-[58ch] leading-relaxed text-muted">
               Every project below has its own page with the architecture, the

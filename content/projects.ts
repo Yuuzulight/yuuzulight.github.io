@@ -347,6 +347,46 @@ export const projects: Project[] = [
       { label: "Source on GitHub", href: "https://github.com/Yuuzulight/db-artisan", kind: "code" },
     ],
   },
+
+  {
+    slug: "argos",
+    name: "Argos",
+    kind: "Desktop widget engine",
+    blurb:
+      "A from-scratch Rainmeter-style widget engine for Windows, currently at the design stage: an approved spec and a component-by-component plan, no engine code written yet.",
+    lede: "A native Win32 and Direct2D desktop widget engine, in the spirit of Rainmeter: transparent, always-on-top windows that draw live system data like a clock, CPU, RAM and disk usage, configured through a plain-text skin format. As of this page, it is a design and a plan, not yet a shipped line of engine code, and this page says that plainly rather than rounding up.",
+    status: "Design spec approved, no code shipped yet",
+    size: "regular",
+    metrics: [
+      { value: "6", label: "components planned, one issue each" },
+      { value: "0", label: "third-party dependencies beyond the Windows SDK" },
+    ],
+    stack: ["C++17", "Win32", "Direct2D", "DirectWrite", "CMake", "Inno Setup"],
+    problem: [
+      "Widget engines in this space have a habit of reaching for process injection or shell hooks to do interesting things with the desktop, which is also exactly the kind of behaviour that gets a small unsigned tool flagged as malware and makes it fragile against the next Windows update. The design draws a hard line against that before any code exists: every widget is Argos's own transparent, layered window, drawn with documented Win32 and Direct2D APIs, and the engine never touches, injects into, or patches explorer.exe or any other process, for any feature, ever.",
+      "The other constraint is honesty about scope for a v1. No plugin system, no scripting language in the skin format, no property editor, no code signing. Four bundled sample skins prove the mechanism end to end rather than a wide library that would take attention away from getting the engine itself right.",
+    ],
+    architecture: [
+      "Each widget is a layered, borderless, always-on-top window with per-pixel alpha transparency, drawn through Direct2D and DirectWrite rather than Win32 Common Controls, so the widgets and the manager application share exactly one rendering technology and one visual style.",
+      "Drag-to-reposition is built into the window engine itself rather than bolted on later, specifically so the manager application's own reposition feature can reuse it directly instead of implementing dragging a second time.",
+      "A widget's position is stored as a monitor plus an offset from that monitor's origin, not a raw virtual-desktop pixel coordinate, so a saved layout still makes sense after monitors get rearranged. Per-monitor DPI awareness is handled by rescaling the render target and repositioning into the rect Windows itself suggests on a DPI change.",
+      "The skin format is plain-text and INI-style, conceptually similar to Rainmeter's Measure and Meter split without being byte-compatible with Rainmeter's own syntax. A skin that fails to parse is logged and shown in the manager as failed with a reason, never a crash of the whole app.",
+      "Zero third-party dependencies beyond the Windows SDK. The skin format and the persisted application state both reuse the same hand-written INI parser rather than pulling in a second text format for one or the other.",
+    ],
+    outcome: [
+      "The design spec is approved and the implementation plan for the first component, the rendering and window engine, is written task by task. No engine code has been merged yet. The documented workflow is one GitHub issue per component, one branch and PR per issue, with a Windows CI build required on every PR before it merges.",
+    ],
+    lessons: [
+      {
+        title: "A non-goals list is a design decision, not a placeholder",
+        body: "Writing down what v1 explicitly will not do, no plugin system, no shell modification, no code signing, did more to shape the actual engine architecture than the feature list did. Ruling out process injection up front is what made every later choice, like drawing widgets as ordinary layered windows, the obvious one instead of a corner cut later under pressure.",
+      },
+    ],
+    links: [
+      { label: "Source on GitHub", href: "https://github.com/Yuuzulight/Argos", kind: "code" },
+    ],
+    note: "This one is at the design stage, not the built stage. There is no engine code yet, just an approved spec and a first component's implementation plan. It is listed now because the design work itself is real and worth showing, not to imply it is finished, or even started.",
+  },
 ];
 
 export function getProject(slug: string): Project | undefined {
