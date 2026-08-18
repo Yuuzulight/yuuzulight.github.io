@@ -8,7 +8,9 @@ import { site } from "@/content/site";
 import { CountUp } from "@/components/CountUp";
 import { DetectorSamples } from "@/components/DetectorSamples";
 import { HecateDiagram } from "@/components/HecateDiagram";
+import { GuestIdentityDiagram } from "@/components/GuestIdentityDiagram";
 import { ManaDiagram } from "@/components/ManaDiagram";
+import { VeritarachSplitDiagram } from "@/components/VeritarachSplitDiagram";
 import { Reveal } from "@/components/Reveal";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteNav } from "@/components/SiteNav";
@@ -181,6 +183,8 @@ export default async function WorkPage({ params }: PageProps) {
 
               {project.slug === "hecate" ? <HecateDiagram /> : null}
               {project.slug === "mana" ? <ManaDiagram /> : null}
+              {project.slug === "veritarach" ? <VeritarachSplitDiagram /> : null}
+              {project.slug === "hotel-guest-messaging" ? <GuestIdentityDiagram /> : null}
             </Reveal>
 
             <Reveal className="mt-16">
