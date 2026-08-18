@@ -108,8 +108,8 @@ export const experience: ExperienceEntry[] = [
     period: "2019",
     title: "Game Art Intern",
     org: "Centre for Healthy and Sustainable Cities, NTU",
-    body: "Built Xbox Kinect games that get older adults exercising, for I-SING, the International-Singapore Intergenerational National Games. I-SING is an exergaming programme run with Senior Activity Centres across Singapore, studying whether game-based exercise improves physical health, cognitive function and social wellbeing in adults aged 65 and over. The competition had gone international the year before I joined, with participants in Finland, France, Japan and Taiwan. Designing for this audience is its own problem: the input has to tolerate slow, small and imprecise movement, and the game has to stay legible to someone who has never held a controller.",
-    tags: ["Xbox Kinect", "Motion tracking"],
+    body: "Made the art and 3D models for Xbox Kinect games that get older adults exercising, built for I-SING, the International-Singapore Intergenerational National Games. I-SING is an exergaming programme run with Senior Activity Centres across Singapore, studying whether game-based exercise improves physical health, cognitive function and social wellbeing in adults aged 65 and over. The competition had gone international the year before I joined, with participants in Finland, France, Japan and Taiwan. Art for this audience carries its own constraints. Players stand a few metres back from a screen, so shapes and targets have to read clearly at that distance to someone who has never played a game before.",
+    tags: ["Game art", "3D modelling", "Xbox Kinect"],
     href: "https://www.ntu.edu.sg/arise/research-focus/gerontechnology-for-active-ageing/international-singapore-intergenerational-national-games-(i-sing)",
     linkLabel: "About the I-SING programme",
   },
@@ -125,6 +125,6 @@ export const experience: ExperienceEntry[] = [
     period: "Graduated 2019",
     title: "Diploma in Digital Art and Game Design",
     org: "Nanyang Polytechnic",
-    body: "Studio training in art and game production, with the industry placement spent building the Kinect games above.",
+    body: "Studio training in art and game production, with the industry placement spent on the Kinect games above.",
   },
 ];
