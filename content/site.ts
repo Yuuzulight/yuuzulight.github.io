@@ -10,7 +10,7 @@ export const site = {
   // primary action below the fold on a laptop screen.
   heroLede:
     "I build data pipelines, train the models that run on them, and keep both alive in production.",
-  education: "BSc Data Science, James Cook University Singapore, 2026",
+  education: "BSc Data Science, James Cook University, 2026",
 };
 
 export type SkillGroup = {
@@ -73,7 +73,7 @@ export const skillGroups: SkillGroup[] = [
 ];
 
 export const about = [
-  "I just finished a BSc in Data Science at James Cook University Singapore, and spent my placement as a data engineer on a hotel messaging platform that real hotels use every day. That was the first time my code had users who had no idea I existed, which changes how you think about a schema migration.",
+  "I just finished a BSc in Data Science at James Cook University, and spent my placement as a data engineer on a hotel messaging platform that real hotels use every day. That was the first time my code had users who had no idea I existed, which changes how you think about a schema migration.",
   "Most of what I build outside work comes from wanting a thing to exist. A tracker that could tell me which projects were actually gaining ground. A voice tool that gives useful feedback without a clinical appointment. An assistant that runs on my own machine. They are all small enough to finish and complicated enough to teach me something.",
   "The habit I care most about is checking my own results. On the text detector I built a second, separate evaluation harness specifically to try to break the first one, and it worked, which was annoying and much more useful than the original score. I would rather find that myself than have a reviewer find it for me.",
 ];
@@ -84,7 +84,8 @@ export type ExperienceEntry = {
   period: string;
   title: string;
   org: string;
-  body: string;
+  /** Optional, so an entry can be added before the detail is confirmed. */
+  body?: string;
   tags?: string[];
   href?: string;
 };
@@ -100,10 +101,16 @@ export const experience: ExperienceEntry[] = [
     href: "/work/hotel-guest-messaging/",
   },
   {
+    kind: "role",
+    period: "2019",
+    title: "Internship",
+    org: "CHESS",
+  },
+  {
     kind: "education",
     period: "Graduated 2026",
     title: "BSc Data Science",
-    org: "James Cook University Singapore",
+    org: "James Cook University",
     body: "Coursework across statistics, machine learning and data systems, with the final placement spent building the platform above rather than writing about one.",
   },
 ];

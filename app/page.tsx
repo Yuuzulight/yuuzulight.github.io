@@ -17,15 +17,31 @@ const headlineStats = [
   { value: "63", label: "dbt models running on a daily schedule" },
   { value: "96,646", label: "rows in a training set I built" },
   { value: "50+", label: "hotels using the platform I worked on" },
-  { value: "6", label: "projects shipped and documented" },
+  { value: "$1.20", label: "spent training a model that runs in production" },
 ];
 
-// Cell sizing and tone per project. Six items, six cells, no filler tile.
+// Grid order, lead project first. Anything not listed falls to the end in its
+// content order, so a new project still appears without touching this.
+const displayOrder = [
+  "mana",
+  "hecate",
+  "veritarach",
+  "hotel-guest-messaging",
+  "euphonia",
+  "data-artisan",
+];
+
+const rank = (slug: string) => {
+  const index = displayOrder.indexOf(slug);
+  return index === -1 ? displayOrder.length : index;
+};
+
+// Cell sizing and tone per project. One cell per project, no filler tile.
 const layout: Record<string, { span: string; tone: CardTone }> = {
-  hecate: { span: "lg:col-span-4", tone: "wash" },
-  veritarach: { span: "lg:col-span-2 lg:row-span-2", tone: "tinted" },
+  mana: { span: "lg:col-span-4", tone: "wash" },
+  hecate: { span: "lg:col-span-2 lg:row-span-2", tone: "tinted" },
+  veritarach: { span: "lg:col-span-2", tone: "plain" },
   "hotel-guest-messaging": { span: "lg:col-span-2", tone: "plain" },
-  mana: { span: "lg:col-span-2", tone: "plain" },
   euphonia: { span: "lg:col-span-3", tone: "tinted" },
   "data-artisan": { span: "lg:col-span-3", tone: "plain" },
 };
@@ -40,7 +56,7 @@ const personSchema = {
   jobTitle: "Data and AI engineer",
   alumniOf: {
     "@type": "CollegeOrUniversity",
-    name: "James Cook University Singapore",
+    name: "James Cook University",
   },
   sameAs: [site.github],
   knowsAbout: [
@@ -54,6 +70,9 @@ const personSchema = {
 };
 
 export default function Home() {
+  // Stable sort, so unlisted projects keep their content order.
+  const orderedProjects = [...projects].sort((a, b) => rank(a.slug) - rank(b.slug));
+
   return (
     <>
       <script
@@ -116,7 +135,7 @@ export default function Home() {
         >
           <Reveal>
             <h2 className="max-w-[20ch] font-display text-3xl font-semibold tracking-tight sm:text-4xl">
-              Six things I built, and what each one taught me.
+              Things I have built, and what each one taught me.
             </h2>
             <p className="mt-4 max-w-[58ch] leading-relaxed text-muted">
               Every project below has its own page with the architecture, the
@@ -126,7 +145,7 @@ export default function Home() {
           </Reveal>
 
           <div className="mt-12 grid grid-cols-1 gap-4 lg:grid-cols-6">
-            {projects.map((project, index) => (
+            {orderedProjects.map((project, index) => (
               <Reveal
                 key={project.slug}
                 delay={index * 0.05}
@@ -169,9 +188,11 @@ export default function Home() {
                     <p className="mt-1 font-display text-[0.95rem] font-medium text-accent">
                       {entry.org}
                     </p>
-                    <p className="mt-3 max-w-[62ch] leading-relaxed text-muted">
-                      {entry.body}
-                    </p>
+                    {entry.body ? (
+                      <p className="mt-3 max-w-[62ch] leading-relaxed text-muted">
+                        {entry.body}
+                      </p>
+                    ) : null}
 
                     {entry.tags ? (
                       <ul className="mt-4 flex flex-wrap gap-1.5">
