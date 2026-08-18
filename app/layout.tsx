@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Public_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { AmbientBackground } from "@/components/AmbientBackground";
 
 // Self-hosted at build time by next/font. No Google Fonts <link> in production.
 const bricolage = Bricolage_Grotesque({
@@ -50,6 +51,7 @@ export default function RootLayout({
       <body
         className={`${bricolage.variable} ${publicSans.variable} ${jetbrainsMono.variable} antialiased`}
       >
+        <AmbientBackground />
         {children}
       </body>
     </html>

@@ -190,3 +190,71 @@ body {
   color: var(--color-muted);
   padding-left: 1.1rem;
 }
+
+/* Ambient background drift.
+   Tied to how far the page has been scrolled, not to time, so it only moves
+   while the visitor is actually scrolling and never loops on its own. Reuses
+   the exact glow recipe from the hero (components/ui.tsx Glow), just lower
+   opacity, since this layer sits behind every page rather than one section. */
+.ambient-bg {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.ambient-blob {
+  position: absolute;
+  border-radius: 9999px;
+}
+
+.ambient-blob-a {
+  width: 780px;
+  height: 780px;
+  left: -220px;
+  top: -260px;
+  background: radial-gradient(circle at center, rgba(196, 190, 244, 0.38) 0%, transparent 68%);
+}
+
+.ambient-blob-b {
+  width: 860px;
+  height: 860px;
+  right: -260px;
+  bottom: -300px;
+  background: radial-gradient(circle at center, rgba(146, 120, 226, 0.24) 0%, transparent 66%);
+}
+
+@keyframes drift-a {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(70px, 160px);
+  }
+}
+
+@keyframes drift-b {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(-80px, -180px);
+  }
+}
+
+/* Falls back to two static blobs where scroll-driven animation isn't
+   supported, or where the visitor asked for reduced motion. That is a fine,
+   quieter default, not a broken one. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: scroll(root)) {
+    .ambient-blob-a {
+      animation: drift-a linear both;
+      animation-timeline: scroll(root);
+    }
+    .ambient-blob-b {
+      animation: drift-b linear both;
+      animation-timeline: scroll(root);
+    }
+  }
+}
