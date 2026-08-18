@@ -130,37 +130,32 @@ export const experience: ExperienceEntry[] = [
 ];
 
 export type Update = {
-  /** ISO date. Newest first, this list is not sorted for you. */
+  /** Kept for ordering and for knowing how old an entry is. Not rendered.
+      A visible date is the part that ages badly; the sentence does not. */
   date: string;
-  /** Pre-formatted so nothing has to run at render time. */
-  label: string;
   text: string;
   href?: string;
 };
 
-// Short log of recent work. Edit this by hand; it is meant to be curated
-// rather than complete, and four or five entries is plenty.
+// Recent work, newest first. Curated by hand rather than complete, and four or
+// five entries is plenty.
 export const updates: Update[] = [
   {
     date: "2026-08-18",
-    label: "18 Aug 2026",
     text: "Put this site together, including a demo on the Veritarach page built from recorded model output.",
   },
   {
     date: "2026-08-17",
-    label: "17 Aug 2026",
     text: "Veracia's independent holdout found that the text detector under-flags AI writing outside its training data, which is now documented on its own page rather than buried.",
     href: "/work/veritarach/",
   },
   {
     date: "2026-08-17",
-    label: "17 Aug 2026",
     text: "Hecate's forecast job produced its first clean run after a container image tag mismatch had been silently skipping it.",
     href: "/work/hecate/",
   },
   {
     date: "2026-08-16",
-    label: "16 Aug 2026",
     text: "Released Rozetta v1.0.0, a small MCP server that pulls YouTube transcripts and channel statistics.",
     href: "https://github.com/Yuuzulight/Rozetta",
   },

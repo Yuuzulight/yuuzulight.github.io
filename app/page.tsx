@@ -144,23 +144,20 @@ export default function Home() {
           </Reveal>
         </section>
 
-        {/* Latest updates. A short dated log, kept visually light so it reads
-            as a running note rather than another content block. */}
+        {/* Recent work. Deliberately undated: the sentences stay true for a
+            long time, and a visible date is what would make this look stale. */}
         <section className="mx-auto max-w-6xl px-5 pt-24 sm:px-8 sm:pt-32">
           <Reveal>
             <h2 className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">
-              Latest updates
+              What I have been working on
             </h2>
           </Reveal>
 
           <ol className="mt-6 border-l-2 border-tint pl-5 sm:pl-6">
             {updates.map((update, index) => (
               <Reveal key={`${update.date}-${index}`} delay={index * 0.04}>
-                <li className="py-3">
-                  <p className="font-mono text-[0.68rem] tracking-[0.15em] text-muted uppercase">
-                    {update.label}
-                  </p>
-                  <p className="mt-1 max-w-[68ch] leading-relaxed text-muted">
+                <li className="py-2.5">
+                  <p className="max-w-[68ch] leading-relaxed text-muted">
                     {update.href ? (
                       update.href.startsWith("http") ? (
                         <a
