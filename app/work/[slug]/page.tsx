@@ -8,6 +8,7 @@ import { site } from "@/content/site";
 import { CountUp } from "@/components/CountUp";
 import { DetectorSamples } from "@/components/DetectorSamples";
 import { HecateDiagram } from "@/components/HecateDiagram";
+import { ManaDiagram } from "@/components/ManaDiagram";
 import { Reveal } from "@/components/Reveal";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteNav } from "@/components/SiteNav";
@@ -179,6 +180,7 @@ export default async function WorkPage({ params }: PageProps) {
               </div>
 
               {project.slug === "hecate" ? <HecateDiagram /> : null}
+              {project.slug === "mana" ? <ManaDiagram /> : null}
             </Reveal>
 
             <Reveal className="mt-16">
