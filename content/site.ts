@@ -82,7 +82,6 @@ export const about = [
 
 export type ExperienceEntry = {
   kind: "role" | "education";
-  /** Kept to the year because the exact months are not confirmed. */
   period: string;
   title: string;
   org: string;
@@ -97,7 +96,7 @@ export type ExperienceEntry = {
 export const experience: ExperienceEntry[] = [
   {
     kind: "role",
-    period: "2026",
+    period: "May to Aug 2026",
     title: "Data Engineering Intern",
     org: "Worldtech",
     body: "Worked on a guest messaging platform that hotels use to handle conversations across several channels from one place. My work covered the data layer, the retrieval integration behind suggested replies, and the operational screens staff use day to day. Everything shipped as reviewed pull requests into a team codebase that was already in production with paying clients.",
@@ -106,7 +105,7 @@ export const experience: ExperienceEntry[] = [
   },
   {
     kind: "role",
-    period: "2019",
+    period: "May to Aug 2019",
     title: "Game Art Intern",
     org: "Centre for Healthy and Sustainable Cities, NTU",
     body: "Made the art and 3D models for Xbox Kinect games that get older adults exercising, built for I-SING, the International-Singapore Intergenerational National Games. I-SING is an exergaming programme run with Senior Activity Centres across Singapore, studying whether game-based exercise improves physical health, cognitive function and social wellbeing in adults aged 65 and over. The competition had gone international the year before I joined, with participants in Finland, France, Japan and Taiwan. Art for this audience carries its own constraints. Players stand a few metres back from a screen, so shapes and targets have to read clearly at that distance to someone who has never played a game before.",
