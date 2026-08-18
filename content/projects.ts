@@ -249,7 +249,7 @@ export const projects: Project[] = [
     ],
     problem: [
       "The goal was presence rather than convenience. Not a faster way to run a command, but something you talk to: it listens, replies out loud, remembers what you told it last week, and has a face on screen next to the chat window rather than instead of it. Alice from Sword Art Online is the reference point I keep coming back to.",
-      "A hosted assistant is the same assistant for everybody. Claude and ChatGPT are answering millions of people at once, and whatever they come to know about you lives inside a service built for all of them. I wanted the opposite of that: one instance belonging to one person, shaped by their conversations and nobody else's, and still there if a company changes its plans. Privacy falls out of that arrangement, but it was not the starting point.",
+      "A hosted assistant is the same assistant for everybody. Claude and ChatGPT answer millions of people at once, and whatever they come to know about you sits inside a service built for all of them. I wanted one instance belonging to one person, shaped by their conversations and nobody else's. I also did not want to hand my own information to a company to keep, and I did not want a monthly bill for the privilege. Running the models locally settles all three at once: it is mine, nothing said to it leaves the machine, and there is no subscription and no per-token cost.",
       "Running it locally answers that and creates a harder engineering problem, because the transcription, the model, the voice and the vision all now have to fit and stay responsive on a single consumer machine.",
     ],
     architecture: [
