@@ -6,7 +6,7 @@ import { ArrowLeft, ArrowUpRight, Info } from "@phosphor-icons/react/dist/ssr";
 import { getProject, projects } from "@/content/projects";
 import { site } from "@/content/site";
 import { CountUp } from "@/components/CountUp";
-import { DetectorDemo } from "@/components/DetectorDemo";
+import { DetectorSamples } from "@/components/DetectorSamples";
 import { Reveal } from "@/components/Reveal";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteNav } from "@/components/SiteNav";
@@ -200,11 +200,11 @@ export default async function WorkPage({ params }: PageProps) {
               </div>
             </Reveal>
 
-            {project.slug === "veritarach" && site.veritarachEndpoint ? (
+            {project.slug === "veritarach" ? (
               <Reveal className="mt-16">
                 <SectionHeading>See for yourself</SectionHeading>
                 <div className="mt-5">
-                  <DetectorDemo endpoint={site.veritarachEndpoint} />
+                  <DetectorSamples />
                 </div>
               </Reveal>
             ) : null}
