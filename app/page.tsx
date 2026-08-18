@@ -15,7 +15,7 @@ import { ActionLink, GhostLink, Glow } from "@/components/ui";
 // stays one message with one primary action.
 const headlineStats = [
   { value: "63", label: "dbt models running on a daily schedule" },
-  { value: "96,646", label: "rows in a training set I built" },
+  { value: "100%", label: "of my desktop assistant's inference running on-device" },
   { value: "50+", label: "hotels using the platform I worked on" },
   { value: "$1.20", label: "spent training a model that runs in production" },
 ];
