@@ -126,8 +126,8 @@ export const projects: Project[] = [
     size: "tall",
     metrics: [
       { value: "96,646", label: "rows in the training set" },
-      { value: "99.65%", label: "F1 on its own held-out split" },
-      { value: "$1.20", label: "total GPU cost across two training runs" },
+      { value: "99.86%", label: "F1 on its own held-out split" },
+      { value: "$1.20", label: "spent on rented GPU training" },
     ],
     stack: [
       "PyTorch",
@@ -150,7 +150,7 @@ export const projects: Project[] = [
       "Registration on the protocol meant setting up an EVM wallet, funding it on a testnet, and submitting an on-chain transaction to activate the service as a node for the text-detection intent.",
     ],
     outcome: [
-      "The model reports 99.65% F1 on its own held-out test set, and the deployed service is registered and active on the protocol. I verified the registration by querying the protocol's own backend and checking the wallet's transaction nonce, rather than trusting the success message the tooling returned.",
+      "The model reports 99.86% F1 on its own held-out test set, and the deployed service is registered and active on the protocol. I verified the registration by querying the protocol's own backend and checking the wallet's transaction nonce, rather than trusting the success message the tooling returned.",
       "Then I built Veracia, a separate evaluation harness with an independently constructed holdout, and pointed it at the live deployment. It found that the score does not survive contact with text outside the training distribution: recall dropped to 0.042, catching one of 24 AI samples, and the 23 misses were returned as human with 0.98 or higher confidence. Across a wider cross-model set, 38 of 100 clearly-AI samples came back as human.",
       "The model had learned a narrower rule than the metric implied, roughly \"call it human unless it looks like the training data\". That is a real result about the project, and it is the reason the F1 figure on this page is always stated against its own split.",
     ],
@@ -165,7 +165,7 @@ export const projects: Project[] = [
       },
       {
         title: "A high score is a claim, not a conclusion",
-        body: "Shipping at 99.65% and stopping would have been the easy path, and the number would have been technically true the whole time. Building the thing that could disprove it is what turned a metric into an actual understanding of what the model does.",
+        body: "Shipping at 99.86% and stopping would have been the easy path, and the number would have been technically true the whole time. Building the thing that could disprove it is what turned a metric into an actual understanding of what the model does.",
       },
     ],
     links: [

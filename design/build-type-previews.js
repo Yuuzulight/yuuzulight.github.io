@@ -104,7 +104,7 @@ function mock(o) {
         <span class="kind">Fine-tuned AI-text detector</span>
         <h3>Veritarach</h3>
         <p>A DeBERTa-v3 classifier deployed as a live service and registered on-chain as an inference node.</p>
-        <div class="metric">99.65% F1 on its held-out split</div>
+        <div class="metric">99.86% F1 on its held-out split</div>
         <div class="tags"><span>PyTorch</span><span>FastAPI</span><span>Docker</span></div>
       </div></div>
     </div>
