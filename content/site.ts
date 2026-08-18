@@ -81,6 +81,7 @@ export const about = [
   "The placement at the end of that degree put me on a hotel messaging platform that real hotels use every day. That was the first time my code had users who had no idea I existed, which changes how you think about a schema migration.",
   "Most of what I build outside work comes from wanting a thing to exist. A tracker that could tell me which projects were actually gaining ground. A voice tool that gives useful feedback without a clinical appointment. An assistant that runs on my own machine. They are all small enough to finish and complicated enough to teach me something.",
   "The habit I care most about is checking my own results. On the text detector I built a second, separate evaluation harness specifically to try to break the first one, and it worked, which was annoying and much more useful than the original score. I would rather find that myself than have a reviewer find it for me.",
+  "Away from all this I came out of game art and it still shows. I play a lot of FFXIV, and I stream on Twitch when I can hold a schedule together. It is also most of the reason Mana has a face at all, because I wanted to know how close a local assistant could get to feeling like a person rather than a prompt box.",
 ];
 
 export type ExperienceEntry = {

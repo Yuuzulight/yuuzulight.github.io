@@ -232,7 +232,7 @@ export const projects: Project[] = [
     kind: "Local-first AI companion",
     blurb:
       "A Windows desktop assistant that listens, replies out loud and reads the screen, with every model running on the local machine.",
-    lede: "A voice assistant for Windows built on the position that the audio never has to leave the machine. Speech recognition, the language model, speech synthesis, memory and screen awareness all run locally, so it works offline and nothing is metered.",
+    lede: "A desktop companion built to find out how close a local assistant can get to feeling like a person rather than a prompt box. It listens, answers out loud, remembers, watches the screen and has a face, with every model running on the machine itself.",
     status: "v0.2.0 developer preview, actively developed",
     size: "regular",
     metrics: [
@@ -248,8 +248,9 @@ export const projects: Project[] = [
       "SearXNG",
     ],
     problem: [
-      "An always-listening assistant is exactly the kind of software you should be most careful about handing to someone else's servers. The cloud versions want your microphone and your screen, and the companion stops existing the moment the subscription lapses or the service shuts down.",
-      "Running it locally solves the privacy question and creates a harder engineering one, because now the transcription, the model, the voice and the vision all have to fit and stay responsive on a single consumer machine.",
+      "The goal was presence rather than convenience. Not a faster way to run a command, but something you talk to: it listens, replies out loud, remembers what you told it last week, and has a face on screen next to the chat window rather than instead of it. Alice from Sword Art Online is the reference point I keep coming back to.",
+      "An always-listening assistant is also exactly the kind of software you should be most careful about handing to someone else's servers. The cloud versions want your microphone and your screen, and the companion stops existing the moment the subscription lapses or the service shuts down.",
+      "Running it locally answers that and creates a harder engineering problem, because the transcription, the model, the voice and the vision all now have to fit and stay responsive on a single consumer machine.",
     ],
     architecture: [
       "Two Electron applications, a launcher and a desktop client, share one Node backend. Any feature has to land in both, which is a constraint the codebase enforces on itself.",
