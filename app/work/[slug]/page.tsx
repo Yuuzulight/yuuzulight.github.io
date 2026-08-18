@@ -7,6 +7,7 @@ import { getProject, projects } from "@/content/projects";
 import { site } from "@/content/site";
 import { CountUp } from "@/components/CountUp";
 import { DetectorSamples } from "@/components/DetectorSamples";
+import { HecateDiagram } from "@/components/HecateDiagram";
 import { Reveal } from "@/components/Reveal";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteNav } from "@/components/SiteNav";
@@ -177,18 +178,7 @@ export default async function WorkPage({ params }: PageProps) {
                 ))}
               </div>
 
-              {project.diagram ? (
-                <figure className="mt-8">
-                  <div className="overflow-x-auto rounded-[26px] bg-surface p-6 ring-1 ring-hairline ring-inset">
-                    <pre className="font-mono text-[0.72rem] leading-[1.9] text-ink">
-                      {project.diagram.join("\n")}
-                    </pre>
-                  </div>
-                  <figcaption className="mt-3 text-[0.83rem] text-muted">
-                    Data flow from the upstream sources through to the dashboards.
-                  </figcaption>
-                </figure>
-              ) : null}
+              {project.slug === "hecate" ? <HecateDiagram /> : null}
             </Reveal>
 
             <Reveal className="mt-16">

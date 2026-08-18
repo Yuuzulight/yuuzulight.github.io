@@ -32,8 +32,6 @@ export type Project = {
   stack: string[];
   problem: string[];
   architecture: string[];
-  /** Monospaced flow diagram. Data engineering reviewers look for this. */
-  diagram?: string[];
   outcome: string[];
   lessons: Lesson[];
   links: ProjectLink[];
@@ -75,23 +73,6 @@ export const projects: Project[] = [
       "Posts about projects Hecate does not yet track are the interesting case. They are not discarded. They are kept, ranked, and the projects behind them get fetched and added, so discussion decides what gets tracked rather than the other way round.",
       "Every tracked project is snapshotted daily. That table is the only history in the system, and it is the only reason growth can be measured at all, because everything else describes the present and upserts in place.",
       "dbt turns the raw tables into staging views, then facts, dimensions, growth and momentum models. Grafana reads the result, Prometheus watches the jobs, and alerts fire when a run does not land.",
-    ],
-    diagram: [
-      "GitHub · npm · PyPI · GitLab        Hacker News · Lobsters",
-      "        |                                    |",
-      "   extractors                          link resolution",
-      "        |                                    |",
-      "   transformer (one schema)            social_mentions",
-      "        |                                /        \\",
-      "   raw_repositories  <--- discovery <---          |",
-      "        |                                          |",
-      "   repository_snapshots (daily, the only history)  |",
-      "        |                                          |",
-      "        +--------------> dbt <-------------------- +",
-      "                          |",
-      "     staging -> facts, dimensions, growth, momentum",
-      "                          |",
-      "     Grafana dashboards · Prometheus metrics · alerts",
     ],
     outcome: [
       "The platform reached v1.2.0 with all 32 tracked issues closed, and now runs on a daily schedule without anyone starting it. The Grafana dashboard exposes 15 panels on anonymous read, so the data is inspectable without an account.",
