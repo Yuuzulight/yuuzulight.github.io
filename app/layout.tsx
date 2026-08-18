@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Outfit, Public_Sans, JetBrains_Mono } from "next/font/google";
+import { Bricolage_Grotesque, Public_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
 // Self-hosted at build time by next/font. No Google Fonts <link> in production.
-const outfit = Outfit({
-  variable: "--font-outfit",
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
   subsets: ["latin"],
   display: "swap",
 });
@@ -48,7 +48,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${outfit.variable} ${publicSans.variable} ${jetbrainsMono.variable} antialiased`}
+        className={`${bricolage.variable} ${publicSans.variable} ${jetbrainsMono.variable} antialiased`}
       >
         {children}
       </body>

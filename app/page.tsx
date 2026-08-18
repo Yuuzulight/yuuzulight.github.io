@@ -69,7 +69,7 @@ export default function Home() {
 
             <h1 className="mt-6 max-w-[19ch] font-display text-4xl leading-[1.05] font-semibold tracking-tight text-balance md:text-5xl lg:text-6xl">
               I build data platforms that keep running after the{" "}
-              <em className="inline-block pb-1 leading-[1.12] text-accent">demo</em>.
+              <em className="font-bold text-accent not-italic">demo</em>.
             </h1>
 
             <p className="mt-6 max-w-[46ch] text-lg leading-relaxed text-muted">

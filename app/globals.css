@@ -16,7 +16,7 @@
   --color-tint-2: #e7e4fa;
   --color-hairline: rgba(31, 27, 46, 0.1);
 
-  --font-display: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-public-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 
