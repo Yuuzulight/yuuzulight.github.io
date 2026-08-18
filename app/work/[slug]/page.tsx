@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowUpRight, Info } from "@phosphor-icons/react/dist/ssr";
 
 import { getProject, projects } from "@/content/projects";
 import { site } from "@/content/site";
+import { CountUp } from "@/components/CountUp";
 import { Reveal } from "@/components/Reveal";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteNav } from "@/components/SiteNav";
@@ -151,7 +152,7 @@ export default async function WorkPage({ params }: PageProps) {
                       {metric.label}
                     </dt>
                     <dd className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">
-                      {metric.value}
+                      <CountUp value={metric.value} />
                     </dd>
                   </div>
                 ))}

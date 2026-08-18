@@ -1,6 +1,3 @@
-"use client";
-
-import { motion, useReducedMotion } from "motion/react";
 import type { ReactNode } from "react";
 
 type RevealProps = {
@@ -10,26 +7,20 @@ type RevealProps = {
 };
 
 /**
- * Scroll entry animation. Isolated client leaf so the pages around it stay
- * server components. Animates transform and opacity only, since animating
- * layout properties forces reflow on every frame.
+ * Scroll reveal, driven entirely by CSS (see the `rise` rules in globals.css).
+ *
+ * This used to be a Motion client component. It was rewritten because the
+ * JavaScript version rendered every wrapped element at opacity 0 in the static
+ * HTML, which meant a failed script left the page blank. It is also now a
+ * server component, so it ships no JavaScript at all.
  */
 export function Reveal({ children, delay = 0, className }: RevealProps) {
-  const reduceMotion = useReducedMotion();
-
-  if (reduceMotion) {
-    return <div className={className}>{children}</div>;
-  }
-
   return (
-    <motion.div
-      className={className}
-      initial={{ opacity: 0, y: 22 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.7, ease: [0.32, 0.72, 0, 1], delay }}
+    <div
+      className={className ? `rise ${className}` : "rise"}
+      style={delay ? { animationDelay: `${delay}s` } : undefined}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }

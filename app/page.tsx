@@ -1,7 +1,12 @@
+import Link from "next/link";
+import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
+
 import { projects } from "@/content/projects";
-import { about, site, skillGroups } from "@/content/site";
+import { about, experience, site, skillGroups } from "@/content/site";
 import { ProjectCard, type CardTone } from "@/components/ProjectCard";
+import { CountUp } from "@/components/CountUp";
 import { Reveal } from "@/components/Reveal";
+import { Stagger } from "@/components/Stagger";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteNav } from "@/components/SiteNav";
 import { ActionLink, GhostLink, Glow } from "@/components/ui";
@@ -62,7 +67,7 @@ export default function Home() {
         {/* Hero. One eyebrow, one headline, one sentence, two actions. */}
         <section className="relative overflow-hidden pt-16 pb-20 sm:pt-24 sm:pb-28">
           <Glow />
-          <div className="relative mx-auto max-w-6xl px-5 sm:px-8">
+          <Stagger className="relative mx-auto max-w-6xl px-5 sm:px-8" delay={0.1}>
             <p className="inline-block rounded-full bg-tint-2 px-3.5 py-1.5 font-mono text-[0.65rem] tracking-[0.18em] text-accent uppercase">
               {site.role}
             </p>
@@ -80,7 +85,7 @@ export default function Home() {
               <ActionLink href="/#work">See the work</ActionLink>
               <GhostLink href={`mailto:${site.email}`}>Get in touch</GhostLink>
             </div>
-          </div>
+          </Stagger>
         </section>
 
         {/* Numbers. A different layout family from the sections either side. */}
@@ -96,7 +101,7 @@ export default function Home() {
                     {stat.label}
                   </dt>
                   <dd className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">
-                    {stat.value}
+                    <CountUp value={stat.value} />
                   </dd>
                 </div>
               ))}
@@ -135,6 +140,71 @@ export default function Home() {
               </Reveal>
             ))}
           </div>
+        </section>
+
+        {/* Experience. A period rail, which is a different layout family from
+            the bento above and the clusters below. */}
+        <section
+          id="experience"
+          className="mx-auto max-w-6xl scroll-mt-24 px-5 pb-24 sm:px-8 sm:pb-32"
+        >
+          <Reveal>
+            <h2 className="max-w-[20ch] font-display text-3xl font-semibold tracking-tight sm:text-4xl">
+              Where I have worked.
+            </h2>
+          </Reveal>
+
+          <ol className="mt-10">
+            {experience.map((entry, index) => (
+              <Reveal key={entry.title} delay={index * 0.06}>
+                <li className="grid gap-3 border-t border-hairline py-8 sm:grid-cols-[9rem_1fr] sm:gap-10">
+                  <p className="font-mono text-[0.7rem] tracking-[0.15em] text-muted uppercase sm:pt-1.5">
+                    {entry.period}
+                  </p>
+
+                  <div>
+                    <h3 className="font-display text-xl font-semibold tracking-tight sm:text-2xl">
+                      {entry.title}
+                    </h3>
+                    <p className="mt-1 font-display text-[0.95rem] font-medium text-accent">
+                      {entry.org}
+                    </p>
+                    <p className="mt-3 max-w-[62ch] leading-relaxed text-muted">
+                      {entry.body}
+                    </p>
+
+                    {entry.tags ? (
+                      <ul className="mt-4 flex flex-wrap gap-1.5">
+                        {entry.tags.map((tag) => (
+                          <li
+                            key={tag}
+                            className="rounded-lg bg-surface-2 px-2.5 py-1 text-[0.78rem]"
+                          >
+                            {tag}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : null}
+
+                    {entry.href ? (
+                      <Link
+                        href={entry.href}
+                        className="group mt-5 inline-flex min-h-11 items-center gap-1.5 font-display text-[0.9rem] font-medium text-accent"
+                      >
+                        Read the full write-up
+                        <ArrowRight
+                          size={14}
+                          weight="bold"
+                          aria-hidden
+                          className="transition-transform duration-500 ease-soft group-hover:translate-x-1"
+                        />
+                      </Link>
+                    ) : null}
+                  </div>
+                </li>
+              </Reveal>
+            ))}
+          </ol>
         </section>
 
         {/* Stack. Three clusters with a sentence each, not a badge wall. */}
