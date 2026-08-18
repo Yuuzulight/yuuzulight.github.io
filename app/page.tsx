@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 
 import { projects } from "@/content/projects";
-import { about, experience, site, skillGroups } from "@/content/site";
+import { about, experience, site, skillGroups, updates } from "@/content/site";
 import { ProjectCard, type CardTone } from "@/components/ProjectCard";
 import { CountUp } from "@/components/CountUp";
 import { Headline } from "@/components/Headline";
@@ -142,6 +142,51 @@ export default function Home() {
               ))}
             </dl>
           </Reveal>
+        </section>
+
+        {/* Latest updates. A short dated log, kept visually light so it reads
+            as a running note rather than another content block. */}
+        <section className="mx-auto max-w-6xl px-5 pt-24 sm:px-8 sm:pt-32">
+          <Reveal>
+            <h2 className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">
+              Latest updates
+            </h2>
+          </Reveal>
+
+          <ol className="mt-6 border-l-2 border-tint pl-5 sm:pl-6">
+            {updates.map((update, index) => (
+              <Reveal key={`${update.date}-${index}`} delay={index * 0.04}>
+                <li className="py-3">
+                  <p className="font-mono text-[0.68rem] tracking-[0.15em] text-muted uppercase">
+                    {update.label}
+                  </p>
+                  <p className="mt-1 max-w-[68ch] leading-relaxed text-muted">
+                    {update.href ? (
+                      update.href.startsWith("http") ? (
+                        <a
+                          href={update.href}
+                          target="_blank"
+                          rel="noreferrer noopener"
+                          className="text-ink underline decoration-accent/40 underline-offset-4 transition-colors duration-500 ease-soft hover:decoration-accent"
+                        >
+                          {update.text}
+                        </a>
+                      ) : (
+                        <Link
+                          href={update.href}
+                          className="text-ink underline decoration-accent/40 underline-offset-4 transition-colors duration-500 ease-soft hover:decoration-accent"
+                        >
+                          {update.text}
+                        </Link>
+                      )
+                    ) : (
+                      update.text
+                    )}
+                  </p>
+                </li>
+              </Reveal>
+            ))}
+          </ol>
         </section>
 
         {/* Work. Asymmetric bento, exactly one cell per project. */}
