@@ -11,6 +11,10 @@ export const site = {
   heroLede:
     "I build data pipelines, train the models that run on them, and keep both alive in production.",
   education: "BSc Data Science, James Cook University, 2026",
+  // Public base URL of the deployed Veritarach service. While this is empty the
+  // live demo is not rendered at all, so nothing broken ships. Setting it also
+  // requires the service to send CORS headers allowing this origin.
+  veritarachEndpoint: "",
 };
 
 export type SkillGroup = {
