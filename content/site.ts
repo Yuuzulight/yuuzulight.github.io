@@ -124,6 +124,6 @@ export const experience: ExperienceEntry[] = [
     period: "Graduated 2019",
     title: "Diploma in Digital Art and Game Design",
     org: "Nanyang Polytechnic",
-    body: "Studio training in art and game production. The Kinect work above happened during this period.",
+    body: "Studio training in art and game production, with the industry placement spent building the Kinect games above.",
   },
 ];
