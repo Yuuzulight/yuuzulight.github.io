@@ -5,8 +5,8 @@ import { projects } from "@/content/projects";
 import { about, experience, site, skillGroups } from "@/content/site";
 import { ProjectCard, type CardTone } from "@/components/ProjectCard";
 import { CountUp } from "@/components/CountUp";
+import { Headline } from "@/components/Headline";
 import { Reveal } from "@/components/Reveal";
-import { Stagger } from "@/components/Stagger";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteNav } from "@/components/SiteNav";
 import { ActionLink, GhostLink, Glow } from "@/components/ui";
@@ -88,25 +88,39 @@ export default function Home() {
         {/* Hero. One eyebrow, one headline, one sentence, two actions. */}
         <section className="relative overflow-hidden pt-16 pb-20 sm:pt-24 sm:pb-28">
           <Glow />
-          <Stagger className="relative mx-auto max-w-6xl px-5 sm:px-8" delay={0.1}>
-            <p className="inline-block rounded-full bg-tint-2 px-3.5 py-1.5 font-mono text-[0.65rem] tracking-[0.18em] text-accent uppercase">
+          <div className="relative mx-auto max-w-6xl px-5 sm:px-8">
+            {/* Delays are set here rather than by a wrapper, so the headline can
+                run its own word stagger without a block fade layered over it. */}
+            <p
+              className="rise-in inline-block rounded-full bg-tint-2 px-3.5 py-1.5 font-mono text-[0.65rem] tracking-[0.18em] text-accent uppercase"
+              style={{ animationDelay: "0.05s" }}
+            >
               {site.role}
             </p>
 
             <h1 className="mt-6 max-w-[19ch] font-display text-4xl leading-[1.05] font-semibold tracking-tight text-balance md:text-5xl lg:text-6xl">
-              I build data platforms that keep running after the{" "}
-              <em className="font-bold text-accent not-italic">demo</em>.
+              <Headline
+                text="I build data platforms that keep running after the demo."
+                accent="demo"
+                delay={0.15}
+              />
             </h1>
 
-            <p className="mt-6 max-w-[46ch] text-lg leading-relaxed text-muted">
+            <p
+              className="rise-in mt-6 max-w-[46ch] text-lg leading-relaxed text-muted"
+              style={{ animationDelay: "0.55s" }}
+            >
               {site.heroLede}
             </p>
 
-            <div className="mt-9 flex flex-wrap gap-3">
+            <div
+              className="rise-in mt-9 flex flex-wrap gap-3"
+              style={{ animationDelay: "0.65s" }}
+            >
               <ActionLink href="/#work">See the work</ActionLink>
               <GhostLink href={`mailto:${site.email}`}>Get in touch</GhostLink>
             </div>
-          </Stagger>
+          </div>
         </section>
 
         {/* Numbers. A different layout family from the sections either side. */}

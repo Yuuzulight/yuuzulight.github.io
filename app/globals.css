@@ -83,14 +83,21 @@ body {
   }
 }
 
+/* Words split out of a headline. Inline-block so they can be transformed. */
+.word {
+  display: inline-block;
+}
+
 @media (prefers-reduced-motion: no-preference) {
-  .rise {
+  .rise,
+  .rise-in,
+  .word {
     animation: rise 700ms cubic-bezier(0.32, 0.72, 0, 1) both;
   }
 
-  /* Where scroll-driven animations exist, tie the reveal to the element
-     entering the viewport. Anything already on screen at load is past the
-     range and renders settled. Elsewhere the animation simply runs on load. */
+  /* Only `.rise` is scroll-driven. `.rise-in` and `.word` stay on the time
+     line, because a scroll timeline ignores animation-delay, which would
+     silently flatten every staggered entrance above the fold. */
   @supports (animation-timeline: view()) {
     .rise {
       animation-timeline: view();

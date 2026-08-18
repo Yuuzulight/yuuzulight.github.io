@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { animate, useInView, useReducedMotion } from "motion/react";
 
 /**
@@ -18,7 +18,9 @@ export function CountUp({ value, className }: { value: string; className?: strin
   const inView = useInView(ref, { once: true, margin: "-40px" });
   const reduceMotion = useReducedMotion();
 
-  const match = value.match(/^(\D*?)([\d,]+(?:\.\d+)?)(.*)$/);
+  // Memoised: a fresh match array each render is an unstable effect
+  // dependency, which restarts the tween every time the tree re-renders.
+  const match = useMemo(() => value.match(/^(\D*?)([\d,]+(?:\.\d+)?)(.*)$/), [value]);
 
   useEffect(() => {
     const node = ref.current;
