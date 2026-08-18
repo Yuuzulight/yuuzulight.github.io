@@ -119,4 +119,11 @@ export const experience: ExperienceEntry[] = [
     org: "James Cook University",
     body: "Coursework across statistics, machine learning and data systems, with the final placement spent building the platform above rather than writing about one.",
   },
+  {
+    kind: "education",
+    period: "Graduated 2019",
+    title: "Diploma in Digital Art and Game Design",
+    org: "Nanyang Polytechnic",
+    body: "Studio training in art and game production. The Kinect work above happened during this period.",
+  },
 ];

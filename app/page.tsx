@@ -54,10 +54,10 @@ const personSchema = {
   url: site.url,
   email: `mailto:${site.email}`,
   jobTitle: "Data and AI engineer",
-  alumniOf: {
-    "@type": "CollegeOrUniversity",
-    name: "James Cook University",
-  },
+  alumniOf: [
+    { "@type": "CollegeOrUniversity", name: "James Cook University" },
+    { "@type": "CollegeOrUniversity", name: "Nanyang Polytechnic" },
+  ],
   sameAs: [site.github],
   knowsAbout: [
     "Data engineering",
