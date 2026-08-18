@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Palette previews</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Public+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:#EDECEF;font-family:"Public Sans",system-ui,sans-serif;color:#1b1922}
+
+/* ---------- preview chrome, not part of the design ---------- */
+.chrome{max-width:1080px;margin:0 auto;padding:56px 24px 8px}
+.chrome h1{font-family:"Outfit",sans-serif;font-weight:600;font-size:26px;letter-spacing:-.02em;margin:0 0 10px}
+.chrome p{margin:0;max-width:62ch;line-height:1.6;font-size:15px;color:#4d4a57}
+.vbar{max-width:1080px;margin:64px auto 14px;padding:0 24px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.vbar .n{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#8a8694}
+.vbar .t{font-family:"Outfit",sans-serif;font-weight:600;font-size:19px;letter-spacing:-.01em}
+.vbar .d{font-size:14px;color:#5f5c69}
+.swatches{display:flex;gap:6px;margin-left:auto}
+.swatches i{width:26px;height:26px;border-radius:8px;display:block;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+
+/* ---------- palettes ---------- */
+.mock{--radius-out:30px;--radius-in:22px}
+.mock[data-p="float"]{
+  --paper:#F5FBF8; --surface:#FFFFFF; --surface-2:#F0F7FA;
+  --ink:#26223A; --muted:#67617E; --accent:#6D5BD0; --accent-rgb:109,91,208;
+  --accent-ink:#FFFFFF; --tint:#D3F2E4; --tint-2:#E4E0FA; --hairline:rgba(38,34,58,.09);
+  --glow-a:rgba(150,232,205,.55); --glow-b:rgba(178,166,246,.45);
+}
+.mock[data-p="lilac"]{
+  --paper:#FDF6F9; --surface:#FFFFFF; --surface-2:#FBF0F4;
+  --ink:#2E2430; --muted:#756A76; --accent:#8B5FBF; --accent-rgb:139,95,191;
+  --accent-ink:#FFFFFF; --tint:#FADCE7; --tint-2:#EBDDF7; --hairline:rgba(46,36,48,.09);
+  --glow-a:rgba(250,205,224,.62); --glow-b:rgba(203,171,236,.45);
+}
+.mock[data-p="grape"]{
+  --paper:#F1F0FA; --surface:#FFFFFF; --surface-2:#EAE8F7;
+  --ink:#1F1B2E; --muted:#5F5978; --accent:#5B2BB8; --accent-rgb:91,43,184;
+  --accent-ink:#FFFFFF; --tint:#DCD9F5; --tint-2:#E7E4FA; --hairline:rgba(31,27,46,.10);
+  --glow-a:rgba(196,190,244,.55); --glow-b:rgba(146,120,226,.34);
+}
+
+/* ---------- the mock ---------- */
+.mock{position:relative;overflow:hidden;background:var(--paper);color:var(--ink);
+  border-radius:26px;max-width:1080px;margin:0 auto;
+  box-shadow:0 30px 70px -50px rgba(20,16,40,.55)}
+.mock .bleed{position:absolute;inset:0;pointer-events:none}
+.mock .bleed::before{content:"";position:absolute;width:760px;height:760px;left:-260px;top:-380px;
+  background:radial-gradient(circle at center,var(--glow-a) 0%,transparent 66%)}
+.mock .bleed::after{content:"";position:absolute;width:820px;height:820px;right:-320px;top:-260px;
+  background:radial-gradient(circle at center,var(--glow-b) 0%,transparent 64%)}
+.mock .inner{position:relative;padding:34px 40px 40px}
+
+/* nav */
+.nav{display:flex;align-items:center;gap:26px;margin-bottom:64px}
+.mark{font-family:"Outfit",sans-serif;font-weight:700;font-size:17px;letter-spacing:-.02em}
+.mark span{color:var(--accent)}
+.nav ul{list-style:none;display:flex;gap:22px;margin:0 0 0 auto;padding:0}
+.nav a{font-size:13.5px;color:var(--muted);text-decoration:none;transition:color .5s cubic-bezier(.32,.72,0,1)}
+.nav a:hover{color:var(--ink)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:52px;align-items:start}
+.eyebrow{display:inline-block;font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--accent);background:var(--tint-2);
+  border-radius:999px;padding:6px 13px;margin-bottom:22px}
+h2.h1{font-family:"Outfit",sans-serif;font-weight:600;font-size:clamp(34px,4.2vw,50px);line-height:1.06;
+  letter-spacing:-.03em;margin:0 0 20px;max-width:15ch}
+h2.h1 em{font-style:italic;font-weight:600;color:var(--accent);line-height:1.12;padding-bottom:2px;display:inline-block}
+.lede{margin:0 0 30px;font-size:16px;line-height:1.68;color:var(--muted);max-width:52ch}
+.ctas{display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:14px;border:0;cursor:pointer;text-decoration:none;
+  font-family:"Outfit",sans-serif;font-weight:500;font-size:14.5px;border-radius:999px;
+  padding:9px 9px 9px 22px;transition:transform .5s cubic-bezier(.32,.72,0,1)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);
+  box-shadow:0 16px 34px -18px rgba(var(--accent-rgb),.85)}
+.btn.primary .cap{width:30px;height:30px;border-radius:999px;background:rgba(255,255,255,.18);
+  display:grid;place-items:center;transition:transform .5s cubic-bezier(.32,.72,0,1)}
+.btn.ghost{background:var(--surface);color:var(--ink);padding:9px 22px;
+  box-shadow:inset 0 0 0 1px var(--hairline)}
+.btn:hover{transform:translateY(-1px)}
+.btn:active{transform:scale(.985)}
+.btn.primary:hover .cap{transform:translate(2px,-1px) scale(1.06)}
+.btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.6}
+
+/* stat rail */
+.rail{display:grid;gap:10px}
+.stat{background:var(--surface);border-radius:18px;padding:16px 18px;box-shadow:inset 0 0 0 1px var(--hairline)}
+.stat b{display:block;font-family:"Outfit",sans-serif;font-weight:600;font-size:23px;letter-spacing:-.02em}
+.stat span{font-size:12.5px;color:var(--muted)}
+.stat b small{font-size:13px;font-weight:500;color:var(--muted);letter-spacing:0}
+
+/* work */
+.sechead{display:flex;align-items:baseline;gap:16px;margin:74px 0 20px}
+.sechead h3{font-family:"Outfit",sans-serif;font-weight:600;font-size:22px;letter-spacing:-.02em;margin:0}
+.sechead p{margin:0;font-size:13.5px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:1.35fr .95fr;gap:16px}
+.shell{background:var(--tint);border-radius:var(--radius-out);padding:7px;
+  box-shadow:inset 0 0 0 1px var(--hairline);transition:transform .6s cubic-bezier(.32,.72,0,1)}
+.shell:hover{transform:translateY(-3px)}
+.core{background:var(--surface);border-radius:var(--radius-in);padding:24px 26px 22px;height:100%;
+  box-shadow:inset 0 1px 1px rgba(255,255,255,.9)}
+.core h4{font-family:"Outfit",sans-serif;font-weight:600;font-size:18.5px;letter-spacing:-.02em;margin:0 0 7px}
+.core .kind{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--muted);display:block;margin-bottom:13px}
+.core p{margin:0 0 16px;font-size:14px;line-height:1.62;color:var(--muted)}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:11.5px;color:var(--ink);background:var(--surface-2);border-radius:8px;padding:4px 9px}
+.metric{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--accent);margin-bottom:14px}
+
+@media (max-width:820px){
+  .mock .inner{padding:26px 20px 30px}
+  .hero{grid-template-columns:1fr;gap:32px}
+  .grid{grid-template-columns:1fr}
+  .nav ul{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition-duration:.01ms !important;animation-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+
+<div class="chrome">
+  <h1>Three pastel directions, same layout</h1>
+  <p>Identical composition and typography across all three, so the palette is the only thing changing. Type pairing is still open: this is Outfit for display, Public Sans for body, JetBrains Mono for small data labels. All copy is real, pulled from your brief.</p>
+</div>
+
+
+
+<div class="vbar"><span class="n">Option 1</span><span class="t">Soda Float</span><span class="d">Mint paper, lavender accent. Coolest and freshest.</span><span class="swatches"><i style="background:#F5FBF8"></i><i style="background:#D3F2E4"></i><i style="background:#6D5BD0"></i></span></div>
+<div class="mock" data-p="float">
+  <div class="bleed"></div>
+  <div class="inner">
+    <nav class="nav">
+      <div class="mark">yuuzu<span>.</span></div>
+      <ul><li><a href="#">Work</a></li><li><a href="#">Stack</a></li><li><a href="#">About</a></li><li><a href="#">Contact</a></li></ul>
+    </nav>
+
+    <div class="hero">
+      <div>
+        <span class="eyebrow">Data and AI engineering</span>
+        <h2 class="h1">I build data platforms that keep running after the <em>demo</em>.</h2>
+        <p class="lede">BSc Data Science, JCU Singapore. Lately: a repository intelligence platform that runs itself every day, a fine-tuned AI-text detector serving live traffic, and a guest messaging system in production across 50+ hotels.</p>
+        <div class="ctas">
+          <a class="btn primary" href="#">See the work<span class="cap"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></svg></span></a>
+          <a class="btn ghost" href="#">Get in touch</a>
+        </div>
+      </div>
+      <div class="rail">
+        <div class="stat"><b>63</b><span>dbt models running in production</span></div>
+        <div class="stat"><b>96,646</b><span>rows in the detector training set</span></div>
+        <div class="stat"><b>50+</b><span>hotels on the messaging platform</span></div>
+        <div class="stat"><b>&lt;$1.20<small> total</small></b><span>spent on GPU training runs</span></div>
+      </div>
+    </div>
+
+    <div class="sechead">
+      <h3>Selected work</h3>
+      <p>Six projects, each with a full write-up</p>
+    </div>
+    <div class="grid">
+      <div class="shell"><div class="core">
+        <h4>Hecate</h4>
+        <span class="kind">Repository intelligence platform</span>
+        <p>Tracks repository health on a daily schedule. Python ETL into Postgres, 63 dbt models, orchestrated on Kubernetes with Prometheus and Grafana watching every run.</p>
+        <div class="metric">v1.2.0, running unattended</div>
+        <div class="tags"><span class="tag">Python</span><span class="tag">dbt</span><span class="tag">Kubernetes</span><span class="tag">PostgreSQL</span><span class="tag">Grafana</span></div>
+      </div></div>
+      <div class="shell"><div class="core">
+        <h4>Veritarach</h4>
+        <span class="kind">AI-text detector</span>
+        <p>Fine-tuned DeBERTa-v3 classifier, deployed behind Caddy on a live HTTPS endpoint and registered on-chain as an active inference node.</p>
+        <div class="metric">99.65% F1 on its held-out split</div>
+        <div class="tags"><span class="tag">PyTorch</span><span class="tag">FastAPI</span><span class="tag">Docker</span></div>
+      </div></div>
+    </div>
+  </div>
+</div>
+
+<div class="vbar"><span class="n">Option 2</span><span class="t">Lilac Cream Soda</span><span class="d">Blush paper, softer lilac accent. Warmest and cosiest.</span><span class="swatches"><i style="background:#FDF6F9"></i><i style="background:#FADCE7"></i><i style="background:#8B5FBF"></i></span></div>
+<div class="mock" data-p="lilac">
+  <div class="bleed"></div>
+  <div class="inner">
+    <nav class="nav">
+      <div class="mark">yuuzu<span>.</span></div>
+      <ul><li><a href="#">Work</a></li><li><a href="#">Stack</a></li><li><a href="#">About</a></li><li><a href="#">Contact</a></li></ul>
+    </nav>
+
+    <div class="hero">
+      <div>
+        <span class="eyebrow">Data and AI engineering</span>
+        <h2 class="h1">I build data platforms that keep running after the <em>demo</em>.</h2>
+        <p class="lede">BSc Data Science, JCU Singapore. Lately: a repository intelligence platform that runs itself every day, a fine-tuned AI-text detector serving live traffic, and a guest messaging system in production across 50+ hotels.</p>
+        <div class="ctas">
+          <a class="btn primary" href="#">See the work<span class="cap"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></svg></span></a>
+          <a class="btn ghost" href="#">Get in touch</a>
+        </div>
+      </div>
+      <div class="rail">
+        <div class="stat"><b>63</b><span>dbt models running in production</span></div>
+        <div class="stat"><b>96,646</b><span>rows in the detector training set</span></div>
+        <div class="stat"><b>50+</b><span>hotels on the messaging platform</span></div>
+        <div class="stat"><b>&lt;$1.20<small> total</small></b><span>spent on GPU training runs</span></div>
+      </div>
+    </div>
+
+    <div class="sechead">
+      <h3>Selected work</h3>
+      <p>Six projects, each with a full write-up</p>
+    </div>
+    <div class="grid">
+      <div class="shell"><div class="core">
+        <h4>Hecate</h4>
+        <span class="kind">Repository intelligence platform</span>
+        <p>Tracks repository health on a daily schedule. Python ETL into Postgres, 63 dbt models, orchestrated on Kubernetes with Prometheus and Grafana watching every run.</p>
+        <div class="metric">v1.2.0, running unattended</div>
+        <div class="tags"><span class="tag">Python</span><span class="tag">dbt</span><span class="tag">Kubernetes</span><span class="tag">PostgreSQL</span><span class="tag">Grafana</span></div>
+      </div></div>
+      <div class="shell"><div class="core">
+        <h4>Veritarach</h4>
+        <span class="kind">AI-text detector</span>
+        <p>Fine-tuned DeBERTa-v3 classifier, deployed behind Caddy on a live HTTPS endpoint and registered on-chain as an active inference node.</p>
+        <div class="metric">99.65% F1 on its held-out split</div>
+        <div class="tags"><span class="tag">PyTorch</span><span class="tag">FastAPI</span><span class="tag">Docker</span></div>
+      </div></div>
+    </div>
+  </div>
+</div>
+
+<div class="vbar"><span class="n">Option 3</span><span class="t">Milky Grape</span><span class="d">Pale periwinkle paper, one saturated grape accent. Strongest contrast.</span><span class="swatches"><i style="background:#F1F0FA"></i><i style="background:#DCD9F5"></i><i style="background:#5B2BB8"></i></span></div>
+<div class="mock" data-p="grape">
+  <div class="bleed"></div>
+  <div class="inner">
+    <nav class="nav">
+      <div class="mark">yuuzu<span>.</span></div>
+      <ul><li><a href="#">Work</a></li><li><a href="#">Stack</a></li><li><a href="#">About</a></li><li><a href="#">Contact</a></li></ul>
+    </nav>
+
+    <div class="hero">
+      <div>
+        <span class="eyebrow">Data and AI engineering</span>
+        <h2 class="h1">I build data platforms that keep running after the <em>demo</em>.</h2>
+        <p class="lede">BSc Data Science, JCU Singapore. Lately: a repository intelligence platform that runs itself every day, a fine-tuned AI-text detector serving live traffic, and a guest messaging system in production across 50+ hotels.</p>
+        <div class="ctas">
+          <a class="btn primary" href="#">See the work<span class="cap"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></svg></span></a>
+          <a class="btn ghost" href="#">Get in touch</a>
+        </div>
+      </div>
+      <div class="rail">
+        <div class="stat"><b>63</b><span>dbt models running in production</span></div>
+        <div class="stat"><b>96,646</b><span>rows in the detector training set</span></div>
+        <div class="stat"><b>50+</b><span>hotels on the messaging platform</span></div>
+        <div class="stat"><b>&lt;$1.20<small> total</small></b><span>spent on GPU training runs</span></div>
+      </div>
+    </div>
+
+    <div class="sechead">
+      <h3>Selected work</h3>
+      <p>Six projects, each with a full write-up</p>
+    </div>
+    <div class="grid">
+      <div class="shell"><div class="core">
+        <h4>Hecate</h4>
+        <span class="kind">Repository intelligence platform</span>
+        <p>Tracks repository health on a daily schedule. Python ETL into Postgres, 63 dbt models, orchestrated on Kubernetes with Prometheus and Grafana watching every run.</p>
+        <div class="metric">v1.2.0, running unattended</div>
+        <div class="tags"><span class="tag">Python</span><span class="tag">dbt</span><span class="tag">Kubernetes</span><span class="tag">PostgreSQL</span><span class="tag">Grafana</span></div>
+      </div></div>
+      <div class="shell"><div class="core">
+        <h4>Veritarach</h4>
+        <span class="kind">AI-text detector</span>
+        <p>Fine-tuned DeBERTa-v3 classifier, deployed behind Caddy on a live HTTPS endpoint and registered on-chain as an active inference node.</p>
+        <div class="metric">99.65% F1 on its held-out split</div>
+        <div class="tags"><span class="tag">PyTorch</span><span class="tag">FastAPI</span><span class="tag">Docker</span></div>
+      </div></div>
+    </div>
+  </div>
+</div>
+
+
+<div style="height:80px"></div>
+</body>
+</html>

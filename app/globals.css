@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+/* Milky Grape.
+   Pale periwinkle paper, one saturated grape accent. The second colour (tint)
+   is a surface only, never a second accent, so the page keeps a single voice. */
+@theme {
+  --color-paper: #f1f0fa;
+  --color-surface: #ffffff;
+  --color-surface-2: #eae8f7;
+  --color-ink: #1f1b2e;
+  --color-muted: #5f5978;
+  --color-accent: #5b2bb8;
+  --color-accent-soft: #7b52d4;
+  --color-accent-ink: #ffffff;
+  --color-tint: #dcd9f5;
+  --color-tint-2: #e7e4fa;
+  --color-hairline: rgba(31, 27, 46, 0.1);
+
+  --font-display: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-public-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+
+  --radius-shell: 30px;
+  --radius-core: 22px;
+
+  /* Real-world mass. Nothing on this page uses a linear or ease-in-out curve. */
+  --ease-soft: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* Shadows are tinted with the accent, never neutral black. */
+  --shadow-lift: 0 18px 44px -30px rgba(91, 43, 184, 0.55);
+  --shadow-cta: 0 16px 34px -18px rgba(91, 43, 184, 0.8);
+}
+
+/* The brief calls for a light pastel page, so the theme is deliberately
+   single-mode. Declaring it stops browsers auto-inverting form controls. */
+html {
+  color-scheme: light;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background-color: var(--color-tint);
+  color: var(--color-ink);
+}
+
+/* Focus ring lives on the accent so keyboard users get the brand, not a default blue. */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
