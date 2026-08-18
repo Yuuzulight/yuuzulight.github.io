@@ -7,6 +7,7 @@ import { Reveal } from "@/components/Reveal";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteNav } from "@/components/SiteNav";
 import { Glow } from "@/components/ui";
+import { site } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -24,8 +25,27 @@ export const metadata: Metadata = {
 export default function BlogIndex() {
   const posts = getPosts();
 
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    name: "Blog",
+    url: `${site.url}/blog/`,
+    author: { "@type": "Person", name: site.handle, url: site.url },
+    blogPost: posts.map((post) => ({
+      "@type": "BlogPosting",
+      headline: post.title,
+      datePublished: post.date,
+      url: `${site.url}/blog/${post.slug}/`,
+    })),
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
+
       <SiteNav />
 
       <main>

@@ -3,6 +3,7 @@ import { ArrowRight, ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 
 import { projects } from "@/content/projects";
 import { about, experience, site, skillGroups, updates } from "@/content/site";
+import { formatDate, getPosts } from "@/lib/posts";
 import { ProjectCard, type CardTone } from "@/components/ProjectCard";
 import { CountUp } from "@/components/CountUp";
 import { Headline } from "@/components/Headline";
@@ -74,6 +75,7 @@ export default function Home() {
   const orderedProjects = [...projects].sort((a, b) => rank(a.slug) - rank(b.slug));
   const roles = experience.filter((entry) => entry.kind === "role");
   const education = experience.filter((entry) => entry.kind === "education");
+  const [latestPost] = getPosts();
 
   return (
     <>
@@ -184,6 +186,39 @@ export default function Home() {
               </Reveal>
             ))}
           </ol>
+
+          {latestPost ? (
+            <Reveal delay={updates.length * 0.04} className="mt-6">
+              <Link
+                href={`/blog/${latestPost.slug}/`}
+                className="group block rounded-[22px] bg-surface p-5 ring-1 ring-hairline ring-inset transition-transform duration-500 ease-soft hover:-translate-y-px sm:p-6"
+              >
+                <p className="font-mono text-[0.65rem] tracking-[0.15em] text-accent uppercase">
+                  Latest from the blog
+                </p>
+                <p className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                  <span className="font-display text-lg font-semibold tracking-tight text-ink">
+                    {latestPost.title}
+                  </span>
+                  <span className="font-mono text-[0.72rem] text-muted">
+                    {formatDate(latestPost.date)} &middot; {latestPost.readingMinutes} min read
+                  </span>
+                </p>
+                <p className="mt-2 max-w-[62ch] leading-relaxed text-muted">
+                  {latestPost.summary}
+                </p>
+                <span className="mt-3 inline-flex items-center gap-1.5 font-display text-[0.88rem] font-medium text-accent">
+                  Read it
+                  <ArrowRight
+                    size={13}
+                    weight="bold"
+                    aria-hidden
+                    className="transition-transform duration-500 ease-soft group-hover:translate-x-1"
+                  />
+                </span>
+              </Link>
+            </Reveal>
+          ) : null}
         </section>
 
         {/* Work. Asymmetric bento, exactly one cell per project. */}

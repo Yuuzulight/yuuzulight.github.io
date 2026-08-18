@@ -21,6 +21,21 @@ export type Post = PostMeta & {
   html: string;
 };
 
+/**
+ * gray-matter's YAML parser auto-casts an unquoted `date: 2026-08-18` in
+ * frontmatter into a native Date object. String(date) then calls
+ * Date.prototype.toString(), which renders in the build machine's local
+ * timezone and produces something formatDate() cannot parse back. Normalise
+ * to a plain YYYY-MM-DD string here, from UTC components, regardless of
+ * whether the frontmatter value came back as a Date or a string.
+ */
+function toIsoDate(value: unknown): string {
+  if (value instanceof Date) {
+    return value.toISOString().slice(0, 10);
+  }
+  return String(value ?? "");
+}
+
 function readPostFile(fileName: string): Post {
   const slug = fileName.replace(/\.md$/, "");
   const raw = fs.readFileSync(path.join(postsDir, fileName), "utf8");
@@ -31,7 +46,7 @@ function readPostFile(fileName: string): Post {
   return {
     slug,
     title: String(data.title ?? slug),
-    date: String(data.date ?? ""),
+    date: toIsoDate(data.date),
     summary: String(data.summary ?? ""),
     tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
     // 200 wpm is the usual estimate. Never show zero.
