@@ -72,6 +72,8 @@ const personSchema = {
 export default function Home() {
   // Stable sort, so unlisted projects keep their content order.
   const orderedProjects = [...projects].sort((a, b) => rank(a.slug) - rank(b.slug));
+  const roles = experience.filter((entry) => entry.kind === "role");
+  const education = experience.filter((entry) => entry.kind === "education");
 
   return (
     <>
@@ -174,7 +176,7 @@ export default function Home() {
           </Reveal>
 
           <ol className="mt-10">
-            {experience.map((entry, index) => (
+            {roles.map((entry, index) => (
               <Reveal key={entry.title} delay={index * 0.06}>
                 <li className="grid gap-3 border-t border-hairline py-8 sm:grid-cols-[9rem_1fr] sm:gap-10">
                   <p className="font-mono text-[0.7rem] tracking-[0.15em] text-muted uppercase sm:pt-1.5">
@@ -243,6 +245,39 @@ export default function Home() {
               </Reveal>
             ))}
           </ol>
+        </section>
+
+        {/* Education. Deliberately a different shape from the rail above. */}
+        <section
+          id="education"
+          className="mx-auto max-w-6xl scroll-mt-24 px-5 pb-24 sm:px-8 sm:pb-32"
+        >
+          <Reveal>
+            <h2 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">
+              Education
+            </h2>
+          </Reveal>
+
+          <div className="mt-8 grid gap-10 sm:grid-cols-2">
+            {education.map((entry, index) => (
+              <Reveal key={entry.title} delay={index * 0.06}>
+                <p className="font-mono text-[0.7rem] tracking-[0.15em] text-muted uppercase">
+                  {entry.period}
+                </p>
+                <h3 className="mt-2 font-display text-xl font-semibold tracking-tight">
+                  {entry.title}
+                </h3>
+                <p className="mt-1 font-display text-[0.95rem] font-medium text-accent">
+                  {entry.org}
+                </p>
+                {entry.body ? (
+                  <p className="mt-3 max-w-[46ch] leading-relaxed text-muted">
+                    {entry.body}
+                  </p>
+                ) : null}
+              </Reveal>
+            ))}
+          </div>
         </section>
 
         {/* Stack. Three clusters with a sentence each, not a badge wall. */}
