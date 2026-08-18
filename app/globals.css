@@ -191,11 +191,15 @@ body {
   padding-left: 1.1rem;
 }
 
-/* Ambient background drift.
-   Tied to how far the page has been scrolled, not to time, so it only moves
-   while the visitor is actually scrolling and never loops on its own. Reuses
-   the exact glow recipe from the hero (components/ui.tsx Glow), just lower
-   opacity, since this layer sits behind every page rather than one section. */
+/* Ambient background drift and color shift.
+   Position drift is tied to how far the page has been scrolled, not to time,
+   so it only moves while the visitor is actually scrolling and never loops.
+   The color shift is built as two overlapping gradient layers per blob, cool
+   and warm, cross-fading via opacity rather than animating the gradient
+   colors directly, since only transform/opacity are compositor-cheap; a
+   background-color animation would repaint on every scroll frame. Both
+   colors stay in the same violet family as the site accent, just warmed
+   toward magenta at one end rather than introducing a second hue. */
 .ambient-bg {
   position: fixed;
   inset: 0;
@@ -214,7 +218,6 @@ body {
   height: 780px;
   left: -220px;
   top: -260px;
-  background: radial-gradient(circle at center, rgba(196, 190, 244, 0.38) 0%, transparent 68%);
 }
 
 .ambient-blob-b {
@@ -222,7 +225,31 @@ body {
   height: 860px;
   right: -260px;
   bottom: -300px;
-  background: radial-gradient(circle at center, rgba(146, 120, 226, 0.24) 0%, transparent 66%);
+}
+
+.ambient-blob-layer {
+  position: absolute;
+  inset: 0;
+}
+
+.ambient-blob-a-cool {
+  background: radial-gradient(circle at center, rgba(196, 190, 244, 0.46) 0%, transparent 68%);
+}
+
+.ambient-blob-a-warm {
+  background: radial-gradient(circle at center, rgba(224, 168, 224, 0.46) 0%, transparent 68%);
+  /* Static fallback (no scroll-timeline support): stays invisible, so an
+     unsupported browser just sees the cool blob, quieter but not broken. */
+  opacity: 0;
+}
+
+.ambient-blob-b-cool {
+  background: radial-gradient(circle at center, rgba(146, 120, 226, 0.32) 0%, transparent 66%);
+}
+
+.ambient-blob-b-warm {
+  background: radial-gradient(circle at center, rgba(190, 104, 200, 0.32) 0%, transparent 66%);
+  opacity: 0;
 }
 
 @keyframes drift-a {
@@ -230,7 +257,7 @@ body {
     transform: translate(0, 0);
   }
   to {
-    transform: translate(70px, 160px);
+    transform: translate(160px, 340px);
   }
 }
 
@@ -239,13 +266,31 @@ body {
     transform: translate(0, 0);
   }
   to {
-    transform: translate(-80px, -180px);
+    transform: translate(-190px, -380px);
   }
 }
 
-/* Falls back to two static blobs where scroll-driven animation isn't
-   supported, or where the visitor asked for reduced motion. That is a fine,
-   quieter default, not a broken one. */
+@keyframes warm-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes cool-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Falls back to two static, cool-only blobs where scroll-driven animation
+   isn't supported, or where the visitor asked for reduced motion. That is a
+   fine, quieter default, not a broken one. */
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: scroll(root)) {
     .ambient-blob-a {
@@ -254,6 +299,16 @@ body {
     }
     .ambient-blob-b {
       animation: drift-b linear both;
+      animation-timeline: scroll(root);
+    }
+    .ambient-blob-a-warm,
+    .ambient-blob-b-warm {
+      animation: warm-in linear both;
+      animation-timeline: scroll(root);
+    }
+    .ambient-blob-a-cool,
+    .ambient-blob-b-cool {
+      animation: cool-out linear both;
       animation-timeline: scroll(root);
     }
   }
