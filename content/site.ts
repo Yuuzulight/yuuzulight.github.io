@@ -141,22 +141,28 @@ export type Update = {
 // five entries is plenty.
 export const updates: Update[] = [
   {
-    date: "2026-08-18",
-    text: "Put this site together, including a demo on the Veritarach page built from recorded model output.",
+    date: "2026-08-21",
+    text: "Calibrated a custom quantization of Mana's coding model on real project code instead of generic text. Checked it honestly across six prompts: two ties, one loss, two minor edges, and one real correctness win.",
+    href: "/blog/the-quantization-that-won-on-exactly-one-bug/",
   },
   {
-    date: "2026-08-17",
-    text: "Veracia's independent holdout found that the text detector under-flags AI writing outside its training data, which turned out to trace back to a checkpoint that never converged.",
-    href: "/blog/the-checkpoint-that-was-quietly-guessing/",
+    date: "2026-08-20",
+    text: "Interrupting a Mana reply, barge-in, the hotkey, a new reply arriving, hung the whole listen loop, because the playback promise was only listening for two of the three ways a clip can stop.",
+    href: "/blog/the-promise-that-only-listened-for-two-events/",
   },
   {
-    date: "2026-08-17",
-    text: "Hecate's forecast job produced its first clean run after a container image tag mismatch had been silently skipping it.",
-    href: "/blog/the-forecast-gate-i-almost-got-wrong/",
+    date: "2026-08-20",
+    text: "Mana's chat log used to lag behind its own voice by as much as a whole reply's playback time. Text now appears the instant a reply is known, not after every queued sentence finishes speaking.",
+    href: "/blog/the-reply-text-that-arrived-after-it-was-already-spoken/",
   },
   {
-    date: "2026-08-16",
-    text: "Released Rozetta v1.0.0, a small MCP server that pulls YouTube transcripts and channel statistics.",
-    href: "https://github.com/Yuuzulight/Rozetta",
+    date: "2026-08-20",
+    text: "Mana's file-tool sandbox guard let a path on a different drive letter slip straight past it on Windows, a gap wide enough for the model's own tools to read or write anywhere on disk.",
+    href: "/blog/the-sandbox-guard-that-forgot-about-drive-letters/",
+  },
+  {
+    date: "2026-08-20",
+    text: "Argos quietly reinvented a broken string conversion in one place because the correct version, a few files away, was invisible to it. Fixing that surfaced a second, unrelated crash bug for free.",
+    href: "/blog/the-conversion-function-that-existed-twice/",
   },
 ];
