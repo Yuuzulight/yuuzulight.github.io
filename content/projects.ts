@@ -353,12 +353,12 @@ export const projects: Project[] = [
     name: "Argos",
     kind: "Desktop widget engine",
     blurb:
-      "A from-scratch Rainmeter-style widget engine for Windows, currently at the design stage: an approved spec and a component-by-component plan, no engine code written yet.",
-    lede: "A native Win32 and Direct2D desktop widget engine, in the spirit of Rainmeter: transparent, always-on-top windows that draw live system data like a clock, CPU, RAM and disk usage, configured through a plain-text skin format. As of this page, it is a design and a plan, not yet a shipped line of engine code, and this page says that plainly rather than rounding up.",
-    status: "Design spec approved, no code shipped yet",
+      "A from-scratch Rainmeter-style widget engine for Windows: the rendering and window engine is merged into main, and the skin format with its first widgets is built and awaiting merge.",
+    lede: "A native Win32 and Direct2D desktop widget engine, in the spirit of Rainmeter: transparent, always-on-top windows that draw live system data like a clock, CPU, RAM and disk usage, configured through a plain-text skin format. Component 1, the rendering and window engine, is merged into main behind CI. Component 2, the skin format with its parser and first four measures and two meters, is built and working on its own branch, reviewed but not yet merged, and this page says exactly that rather than rounding it up to finished or down to not started.",
+    status: "Component 1 of 6 merged to main; component 2 built, pending merge",
     size: "regular",
     metrics: [
-      { value: "6", label: "components planned, one issue each" },
+      { value: "2", label: "of 6 components with real code, 1 merged to main" },
       { value: "0", label: "third-party dependencies beyond the Windows SDK" },
     ],
     stack: ["C++17", "Win32", "Direct2D", "DirectWrite", "CMake", "Inno Setup"],
@@ -374,18 +374,23 @@ export const projects: Project[] = [
       "Zero third-party dependencies beyond the Windows SDK. The skin format and the persisted application state both reuse the same hand-written INI parser rather than pulling in a second text format for one or the other.",
     ],
     outcome: [
-      "The design spec is approved and the implementation plan for the first component, the rendering and window engine, is written task by task. No engine code has been merged yet. The documented workflow is one GitHub issue per component, one branch and PR per issue, with a Windows CI build required on every PR before it merges.",
+      "Component 1, the rendering and window engine, merged into main through a CI-gated PR: layered, per-pixel-alpha windows with drag-to-reposition and per-monitor DPI rescaling, running on a real Windows setup rather than just a spec.",
+      "Component 2, the skin format, is built on its own branch: a hand-written INI parser, the skin loader, and the first four measures and two meters (Clock, CPU, RAM and disk usage, rendered as Text or Bar). It passes its own tests and runs in a live demo, but hasn't merged into main yet. Four components remain, each still one GitHub issue, one branch, one PR, gated on the same Windows CI build as the first two.",
     ],
     lessons: [
       {
         title: "A non-goals list is a design decision, not a placeholder",
         body: "Writing down what v1 explicitly will not do, no plugin system, no shell modification, no code signing, did more to shape the actual engine architecture than the feature list did. Ruling out process injection up front is what made every later choice, like drawing widgets as ordinary layered windows, the obvious one instead of a corner cut later under pressure.",
       },
+      {
+        title: "A helper hidden in an anonymous namespace is a helper nobody else can use",
+        body: "Measure.cpp's UTF-8-to-UTF-16 conversion was correct but scoped to its own translation unit, so the one other place that needed it, the skin-load error path, reinvented a version that mishandled non-ASCII text instead of calling the real one. Moving it into the shared namespace fixed that and surfaced a second bug for free: the original never guarded against the Windows API call returning zero, which would have underflowed a length calculation into a crash.",
+      },
     ],
     links: [
       { label: "Source on GitHub", href: "https://github.com/Yuuzulight/Argos", kind: "code" },
     ],
-    note: "This one is at the design stage, not the built stage. There is no engine code yet, just an approved spec and a first component's implementation plan. It is listed now because the design work itself is real and worth showing, not to imply it is finished, or even started.",
+    note: "Component 1, the rendering and window engine, is merged into main. Component 2, the skin format and its first widgets, is built and working on its own branch, reviewed but not yet merged. Four components are still just a plan. I'm listing it now because the engineering that exists is real, not because the engine as a whole is finished.",
   },
 ];
 
