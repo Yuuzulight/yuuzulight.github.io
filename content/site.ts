@@ -142,6 +142,11 @@ export type Update = {
 export const updates: Update[] = [
   {
     date: "2026-08-21",
+    text: "A flag gating Mana's continuous listening cleared the moment a fallback reply's audio started, not when it finished, so Mana could start listening again while it was still audibly talking.",
+    href: "/blog/the-flag-that-lied-about-being-done/",
+  },
+  {
+    date: "2026-08-21",
     text: "Calibrated a custom quantization of Mana's coding model on real project code instead of generic text. Checked it honestly across six prompts: two ties, one loss, two minor edges, and one real correctness win.",
     href: "/blog/the-quantization-that-won-on-exactly-one-bug/",
   },
@@ -159,10 +164,5 @@ export const updates: Update[] = [
     date: "2026-08-20",
     text: "Mana's file-tool sandbox guard let a path on a different drive letter slip straight past it on Windows, a gap wide enough for the model's own tools to read or write anywhere on disk.",
     href: "/blog/the-sandbox-guard-that-forgot-about-drive-letters/",
-  },
-  {
-    date: "2026-08-20",
-    text: "Argos quietly reinvented a broken string conversion in one place because the correct version, a few files away, was invisible to it. Fixing that surfaced a second, unrelated crash bug for free.",
-    href: "/blog/the-conversion-function-that-existed-twice/",
   },
 ];
