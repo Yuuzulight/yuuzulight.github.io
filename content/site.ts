@@ -147,6 +147,11 @@ export const updates: Update[] = [
   },
   {
     date: "2026-08-21",
+    text: "Hecate's growth windows filled right on schedule a week after launch, but the momentum ranking built on top of them didn't follow: only 32 of 2,068 rows use two signals, and none use all three.",
+    href: "/blog/the-momentum-score-that-never-grew-a-second-signal/",
+  },
+  {
+    date: "2026-08-21",
     text: "Calibrated a custom quantization of Mana's coding model on real project code instead of generic text. Checked it honestly across six prompts: two ties, one loss, two minor edges, and one real correctness win.",
     href: "/blog/the-quantization-that-won-on-exactly-one-bug/",
   },
@@ -159,10 +164,5 @@ export const updates: Update[] = [
     date: "2026-08-20",
     text: "Mana's chat log used to lag behind its own voice by as much as a whole reply's playback time. Text now appears the instant a reply is known, not after every queued sentence finishes speaking.",
     href: "/blog/the-reply-text-that-arrived-after-it-was-already-spoken/",
-  },
-  {
-    date: "2026-08-20",
-    text: "Mana's file-tool sandbox guard let a path on a different drive letter slip straight past it on Windows, a gap wide enough for the model's own tools to read or write anywhere on disk.",
-    href: "/blog/the-sandbox-guard-that-forgot-about-drive-letters/",
   },
 ];
