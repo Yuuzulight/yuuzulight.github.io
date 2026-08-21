@@ -142,8 +142,8 @@ export type Update = {
 export const updates: Update[] = [
   {
     date: "2026-08-21",
-    text: "A flag gating Mana's continuous listening cleared the moment a fallback reply's audio started, not when it finished, so Mana could start listening again while it was still audibly talking.",
-    href: "/blog/the-flag-that-lied-about-being-done/",
+    text: "Consolidated Mana's chat and vision onto one model after a same-day benchmark showed the chat model already beat both vision candidates outright, deleting a second model instead of picking between them.",
+    href: "/blog/the-vision-model-that-didnt-need-to-exist/",
   },
   {
     date: "2026-08-21",
