@@ -178,19 +178,19 @@ list exactly the way `systemd` and `cua` swamp it in the raw table.
     <svg viewBox="0 0 560 345" role="img" aria-label="Horizontal bar chart: this dashboard's momentum leaders, ranked by signal count first. Bar shade marks how many signals corroborate the score, full accent for two signals, lighter for one. pi 54.7, growth and attention. rosenbridge 50.0, asm-hall-of-shame 50.0, msword 46.5, wyzer 44.9, linkedin-feed-blocker 39.9, all single-signal attention. Ranked separately below: skills 100.0 and standardwebhooks 82.3, both single-signal usage." style="width:100%;height:auto;min-width:480px">
       <circle cx="200" cy="12" r="4" fill="var(--color-accent)" />
       <text x="209" y="15" font-family="var(--font-sans)" font-size="11" fill="var(--color-muted)">2 signals corroborate</text>
-      <circle cx="368" cy="12" r="4" fill="var(--color-accent-soft)" />
+      <circle cx="368" cy="12" r="4" fill="var(--color-accent-soft)" fill-opacity="0.5" />
       <text x="377" y="15" font-family="var(--font-sans)" font-size="11" fill="var(--color-muted)">1 signal only</text>
       <line x1="200" y1="38" x2="200" y2="227" stroke="var(--color-hairline)" stroke-width="1" />
       <line x1="200" y1="263" x2="200" y2="317" stroke="var(--color-hairline)" stroke-width="1" />
       <path d="M200,53 L354.6,53 Q358.6,53 358.6,57 L358.6,73 Q358.6,77 354.6,77 L200,77 Z" fill="var(--color-accent)" />
-      <path d="M200,83 L341,83 Q345,83 345,87 L345,103 Q345,107 341,107 L200,107 Z" fill="var(--color-accent-soft)" />
-      <path d="M200,113 L341,113 Q345,113 345,117 L345,133 Q345,137 341,137 L200,137 Z" fill="var(--color-accent-soft)" />
-      <path d="M200,143 L330.85,143 Q334.85,143 334.85,147 L334.85,163 Q334.85,167 330.85,167 L200,167 Z" fill="var(--color-accent-soft)" />
-      <path d="M200,173 L326.21,173 Q330.21,173 330.21,177 L330.21,193 Q330.21,197 326.21,197 L200,197 Z" fill="var(--color-accent-soft)" />
-      <path d="M200,203 L311.71,203 Q315.71,203 315.71,207 L315.71,223 Q315.71,227 311.71,227 L200,227 Z" fill="var(--color-accent-soft)" />
+      <path d="M200,83 L341,83 Q345,83 345,87 L345,103 Q345,107 341,107 L200,107 Z" fill="var(--color-accent-soft)" fill-opacity="0.5" />
+      <path d="M200,113 L341,113 Q345,113 345,117 L345,133 Q345,137 341,137 L200,137 Z" fill="var(--color-accent-soft)" fill-opacity="0.5" />
+      <path d="M200,143 L330.85,143 Q334.85,143 334.85,147 L334.85,163 Q334.85,167 330.85,167 L200,167 Z" fill="var(--color-accent-soft)" fill-opacity="0.5" />
+      <path d="M200,173 L326.21,173 Q330.21,173 330.21,177 L330.21,193 Q330.21,197 326.21,197 L200,197 Z" fill="var(--color-accent-soft)" fill-opacity="0.5" />
+      <path d="M200,203 L311.71,203 Q315.71,203 315.71,207 L315.71,223 Q315.71,227 311.71,227 L200,227 Z" fill="var(--color-accent-soft)" fill-opacity="0.5" />
       <text x="380" y="248" text-anchor="middle" font-family="var(--font-sans)" font-size="10.5" letter-spacing="1" fill="var(--color-muted)">SINGLE SIGNAL — RANKED SEPARATELY</text>
-      <path d="M200,263 L486,263 Q490,263 490,267 L490,283 Q490,287 486,287 L200,287 Z" fill="var(--color-accent-soft)" />
-      <path d="M200,293 L434.67,293 Q438.67,293 438.67,297 L438.67,313 Q438.67,317 434.67,317 L200,317 Z" fill="var(--color-accent-soft)" />
+      <path d="M200,263 L486,263 Q490,263 490,267 L490,283 Q490,287 486,287 L200,287 Z" fill="var(--color-accent-soft)" fill-opacity="0.5" />
+      <path d="M200,293 L434.67,293 Q438.67,293 438.67,297 L438.67,313 Q438.67,317 434.67,317 L200,317 Z" fill="var(--color-accent-soft)" fill-opacity="0.5" />
       <text x="190" y="69" text-anchor="end" font-family="var(--font-sans)" font-size="12" fill="var(--color-muted)">pi</text>
       <text x="190" y="82" text-anchor="end" font-family="var(--font-sans)" font-size="9.5" fill="var(--color-muted)" fill-opacity="0.75">growth + attention</text>
       <text x="190" y="99" text-anchor="end" font-family="var(--font-sans)" font-size="12" fill="var(--color-muted)">rosenbridge</text>
