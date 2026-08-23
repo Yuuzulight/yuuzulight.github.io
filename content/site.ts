@@ -141,6 +141,11 @@ export type Update = {
 // five entries is plenty.
 export const updates: Update[] = [
   {
+    date: "2026-08-23",
+    text: "Mana's coding-agent test runner now executes against a scratch copy instead of the live workspace. My first cut of the node_modules junction only checked the workspace root, which would have silently broken every real test run against this exact repo.",
+    href: "/blog/the-scratch-copy-that-only-checked-the-top-level/",
+  },
+  {
     date: "2026-08-21",
     text: "Consolidated Mana's chat and vision onto one model after a same-day benchmark showed the chat model already beat both vision candidates outright, deleting a second model instead of picking between them.",
     href: "/blog/the-vision-model-that-didnt-need-to-exist/",
@@ -159,10 +164,5 @@ export const updates: Update[] = [
     date: "2026-08-20",
     text: "Interrupting a Mana reply, barge-in, the hotkey, a new reply arriving, hung the whole listen loop, because the playback promise was only listening for two of the three ways a clip can stop.",
     href: "/blog/the-promise-that-only-listened-for-two-events/",
-  },
-  {
-    date: "2026-08-20",
-    text: "Mana's chat log used to lag behind its own voice by as much as a whole reply's playback time. Text now appears the instant a reply is known, not after every queued sentence finishes speaking.",
-    href: "/blog/the-reply-text-that-arrived-after-it-was-already-spoken/",
   },
 ];
