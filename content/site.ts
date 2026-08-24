@@ -141,6 +141,11 @@ export type Update = {
 // five entries is plenty.
 export const updates: Update[] = [
   {
+    date: "2026-08-24",
+    text: "windows-launcher's main window disabled Chromium's background throttling to keep the avatar smooth while unfocused, but that flag stayed off even once the window was genuinely hidden, which it is by default on every startup.",
+    href: "/blog/the-throttle-that-forgot-the-window-could-hide/",
+  },
+  {
     date: "2026-08-21",
     text: "Consolidated Mana's chat and vision onto one model after a same-day benchmark showed the chat model already beat both vision candidates outright, deleting a second model instead of picking between them.",
     href: "/blog/the-vision-model-that-didnt-need-to-exist/",
@@ -159,10 +164,5 @@ export const updates: Update[] = [
     date: "2026-08-20",
     text: "Interrupting a Mana reply, barge-in, the hotkey, a new reply arriving, hung the whole listen loop, because the playback promise was only listening for two of the three ways a clip can stop.",
     href: "/blog/the-promise-that-only-listened-for-two-events/",
-  },
-  {
-    date: "2026-08-20",
-    text: "Mana's chat log used to lag behind its own voice by as much as a whole reply's playback time. Text now appears the instant a reply is known, not after every queued sentence finishes speaking.",
-    href: "/blog/the-reply-text-that-arrived-after-it-was-already-spoken/",
   },
 ];
