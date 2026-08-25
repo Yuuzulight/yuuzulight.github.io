@@ -146,6 +146,11 @@ export const updates: Update[] = [
     href: "/blog/the-static-launcher-that-couldnt-fit-a-pointer/",
   },
   {
+    date: "2026-08-24",
+    text: "windows-launcher's main window disabled Chromium's background throttling to keep the avatar smooth while unfocused, but that flag stayed off even once the window was genuinely hidden, which it is by default on every startup.",
+    href: "/blog/the-throttle-that-forgot-the-window-could-hide/",
+  },
+  {
     date: "2026-08-23",
     text: "Mana's coding-agent test runner now executes against a scratch copy instead of the live workspace. My first cut of the node_modules junction only checked the workspace root, which would have silently broken every real test run against this exact repo.",
     href: "/blog/the-scratch-copy-that-only-checked-the-top-level/",
@@ -159,10 +164,5 @@ export const updates: Update[] = [
     date: "2026-08-21",
     text: "Hecate's growth windows filled right on schedule a week after launch, but the momentum ranking built on top of them didn't follow: only 32 of 2,068 rows use two signals, and none use all three.",
     href: "/blog/the-momentum-score-that-never-grew-a-second-signal/",
-  },
-  {
-    date: "2026-08-21",
-    text: "Calibrated a custom quantization of Mana's coding model on real project code instead of generic text. Checked it honestly across six prompts: two ties, one loss, two minor edges, and one real correctness win.",
-    href: "/blog/the-quantization-that-won-on-exactly-one-bug/",
   },
 ];
