@@ -37,6 +37,11 @@ export type Project = {
   links: ProjectLink[];
   /** Honest framing note rendered as a callout. Used where status needs context. */
   note?: string;
+  /** Optional real series behind the home card's hairline motif. Left unset
+      for projects without an obvious number-per-day (or similar) series on
+      hand -- an invented squiggle isn't worth the "real, not decorative"
+      point this is meant to make. */
+  motif?: number[];
 };
 
 export const projects: Project[] = [
@@ -49,6 +54,9 @@ export const projects: Project[] = [
     lede: "Star counts are a bad proxy for whether a project is alive. Hecate collects repository and package data from four sources, collects discussion from two more, and keeps a daily snapshot so growth can be measured rather than guessed.",
     status: "v1.2.0, running unattended on a daily schedule",
     size: "wide",
+    // Repositories tracked per daily snapshot, 7-20 Aug 2026 -- the same
+    // series charted in the momentum post, reused rather than re-derived.
+    motif: [2010, 2012, 2013, 2022, 2029, 2033, 2035, 2042, 2046, 2064, 2068, 2075, 2079],
     metrics: [
       { value: "63", label: "dbt models in the transform layer" },
       { value: "6", label: "upstream sources normalised to one schema" },

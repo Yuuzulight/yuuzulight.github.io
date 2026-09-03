@@ -43,11 +43,28 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
+// Sets the .dark class before the first paint, so there's no flash of the
+// wrong theme while React hydrates. Runs before ThemeToggle ever mounts;
+// ThemeToggle only reads this class back, it doesn't decide it. A missing
+// or corrupt localStorage value falls back to the OS preference rather
+// than forcing light, so "no stored preference" still means "system", not
+// "light no matter what the visitor's OS says."
+const themeInitScript = `(function () {
+  try {
+    var stored = localStorage.getItem("theme");
+    var dark = stored ? stored === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+    if (dark) document.documentElement.classList.add("dark");
+  } catch (e) {}
+})();`;
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body
         className={`${bricolage.variable} ${publicSans.variable} ${jetbrainsMono.variable} antialiased`}
       >

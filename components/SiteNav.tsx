@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useMotionValueEvent, useScroll } from "motion/react";
 import { site } from "@/content/site";
+import { ThemeToggle } from "./ThemeToggle";
 
 const links = [
   { href: "/#work", label: "Work" },
@@ -37,7 +38,7 @@ export function SiteNav() {
         aria-label="Primary"
         className={`flex items-center gap-1 rounded-full ring-1 ring-hairline backdrop-blur-xl transition-all duration-500 ease-soft ${
           condensed
-            ? "bg-surface/95 p-1 shadow-[0_18px_44px_-26px_rgba(91,43,184,0.6)]"
+            ? "bg-surface/95 p-1 shadow-[0_18px_44px_-26px_rgba(91,43,184,0.6)] dark:shadow-[0_18px_44px_-26px_rgba(0,0,0,0.7)]"
             : "bg-surface/80 p-1.5 shadow-lift"
         }`}
       >
@@ -61,6 +62,8 @@ export function SiteNav() {
             </li>
           ))}
         </ul>
+
+        <ThemeToggle />
 
         <a
           href={`mailto:${site.email}`}

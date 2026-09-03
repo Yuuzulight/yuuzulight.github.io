@@ -15,6 +15,11 @@ export type PostMeta = {
   /** Rough reading time in minutes, derived from word count. */
   readingMinutes: number;
   draft: boolean;
+  /** Optional real series backing the homepage card's sparkline. Only set
+      it when the post actually has one number-per-day (or similar) worth
+      plotting -- there's no fallback motif for posts without one, since a
+      fake trend line is worse than no chart at all. */
+  sparkline?: number[];
 };
 
 export type Post = PostMeta & {
@@ -52,6 +57,7 @@ function readPostFile(fileName: string): Post {
     // 200 wpm is the usual estimate. Never show zero.
     readingMinutes: Math.max(1, Math.round(words / 200)),
     draft: data.draft === true,
+    sparkline: Array.isArray(data.sparkline) ? data.sparkline.map(Number) : undefined,
     // Posts are local files written by the site owner, so the markdown is
     // trusted and rendered as-is. Do not point this at user submissions.
     html: marked.parse(content, { async: false }) as string,

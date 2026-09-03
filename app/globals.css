@@ -1,8 +1,18 @@
 @import "tailwindcss";
 
+/* Class-based dark mode: `dark:` utilities respond to a `.dark` class placed
+   on <html> by ThemeToggle (and set before paint by the inline script in
+   layout.tsx), not to prefers-color-scheme directly. That's what lets a
+   visitor override the OS setting instead of just mirroring it. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Milky Grape.
    Pale periwinkle paper, one saturated grape accent. The second colour (tint)
-   is a surface only, never a second accent, so the page keeps a single voice. */
+   is a surface only, never a second accent, so the page keeps a single voice.
+   Light is still the default (and the theme this site opens in for a
+   visitor with no stored preference and no OS preference), but it is no
+   longer the only mode: the .dark block below is the same voice restated on
+   a dark ground, not a second palette. */
 @theme {
   --color-paper: #f1f0fa;
   --color-surface: #ffffff;
@@ -31,10 +41,37 @@
   --shadow-cta: 0 16px 34px -18px rgba(91, 43, 184, 0.8);
 }
 
-/* The brief calls for a light pastel page, so the theme is deliberately
-   single-mode. Declaring it stops browsers auto-inverting form controls. */
+/* Dark ground for the same palette: deep plum rather than neutral black (no
+   pure #000), the accent lightened so it still carries as text and not just
+   as fill, ink/accent-ink swapped so button contrast direction flips with
+   the ground instead of going muddy. Every component reads these through
+   var(--color-*) already, so this one block is what re-themes the whole
+   site, including the inline SVG charts in blog posts. */
+:root.dark {
+  --color-paper: #17131f;
+  --color-surface: #201a2d;
+  --color-surface-2: #2a2239;
+  --color-ink: #ece9f6;
+  --color-muted: #a89fc4;
+  --color-accent: #9b7ce8;
+  --color-accent-soft: #b9a3ec;
+  --color-accent-ink: #17131f;
+  --color-tint: #2e2544;
+  --color-tint-2: #362b4d;
+  --color-hairline: rgba(236, 233, 246, 0.12);
+
+  --shadow-lift: 0 18px 44px -30px rgba(0, 0, 0, 0.55);
+  --shadow-cta: 0 16px 34px -18px rgba(0, 0, 0, 0.7);
+}
+
+/* Declaring color-scheme (rather than leaving it to the UA) stops browsers
+   auto-inverting form controls out of step with the class above. */
 html {
   color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
 }
 
 body {
@@ -103,6 +140,23 @@ body {
       animation-timeline: view();
       animation-range: entry 0% entry 45%;
     }
+  }
+}
+
+/* Hero signal trace: a slow, looping stroke-draw. Path length is measured
+   by eye against the actual path in HeroSignal (page.tsx) rather than with
+   pathLength="1", so it can stay a plain CSS animation instead of JS
+   measuring the node on mount. */
+@keyframes signal-draw {
+  0% { stroke-dasharray: 640; stroke-dashoffset: 640; opacity: 0; }
+  15% { opacity: 0.9; }
+  65% { stroke-dashoffset: 0; opacity: 0.9; }
+  100% { stroke-dashoffset: 0; opacity: 0; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .signal-trace {
+    animation: signal-draw 6s cubic-bezier(0.32, 0.72, 0, 1) infinite;
   }
 }
 
@@ -221,6 +275,24 @@ body {
   border-bottom: none;
 }
 
+/* Post charts reveal the same way every other section on the site does,
+   reusing the .rise keyframe and its scroll-timeline upgrade rather than a
+   second reveal mechanism just for markdown content. No class needed on the
+   figures themselves in each post file: this targets every <figure> in
+   rendered post markdown, past and future, from one rule. */
+@media (prefers-reduced-motion: no-preference) {
+  .post-body figure {
+    animation: rise 700ms cubic-bezier(0.32, 0.72, 0, 1) both;
+  }
+
+  @supports (animation-timeline: view()) {
+    .post-body figure {
+      animation-timeline: view();
+      animation-range: entry 0% entry 45%;
+    }
+  }
+}
+
 /* Ambient background: a faint dot grid with two soft accent glows behind
    it, drifting with scroll position (see AmbientBackground.tsx — a plain
    scroll listener, not animation-timeline: scroll(), whose browser
@@ -246,4 +318,16 @@ body {
     100% 100%,
     100% 100%,
     30px 30px;
+}
+
+/* The two glow colors and the dot color above are literal, not var()-based,
+   so they don't ride the light/dark token swap on their own -- an ink-
+   colored dot at 0.22 alpha would be nearly invisible on the dark paper.
+   Restated directly for dark rather than reworked into rgb-triplet tokens
+   just for this one background-image. */
+.dark .ambient-grid {
+  background-image:
+    radial-gradient(30% 26% at 20% 22%, rgba(155, 124, 232, 0.35), transparent 70%),
+    radial-gradient(34% 30% at 84% 80%, rgba(217, 140, 227, 0.28), transparent 70%),
+    radial-gradient(circle, rgba(236, 233, 246, 0.16) 1.4px, transparent 1.6px);
 }

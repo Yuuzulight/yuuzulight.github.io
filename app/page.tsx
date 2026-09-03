@@ -7,10 +7,35 @@ import { formatDate, getPosts } from "@/lib/posts";
 import { ProjectCard, type CardTone } from "@/components/ProjectCard";
 import { CountUp } from "@/components/CountUp";
 import { Headline } from "@/components/Headline";
+import { Magnetic } from "@/components/Magnetic";
 import { Reveal } from "@/components/Reveal";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteNav } from "@/components/SiteNav";
 import { ActionLink, GhostLink, Glow } from "@/components/ui";
+
+/** Decorative trace behind the hero headline: a plain looping stroke draw,
+    not a chart of anything -- there's no real per-visit metric to plot
+    there. Kept intentionally faint (see the opacity on its wrapper) so it
+    reads as texture, not as a claim about data. */
+function HeroSignal() {
+  return (
+    <svg
+      viewBox="0 0 340 220"
+      aria-hidden="true"
+      className="pointer-events-none absolute top-2 right-[-20px] hidden w-[340px] opacity-40 md:block"
+    >
+      <path
+        d="M10,170 C60,150 70,90 110,95 C150,100 150,40 200,45 C250,50 240,120 290,110 C310,106 320,80 330,60"
+        fill="none"
+        stroke="var(--color-accent)"
+        strokeWidth="2"
+        strokeLinecap="round"
+        className="signal-trace"
+      />
+      <circle cx="330" cy="60" r="4" fill="var(--color-accent)" />
+    </svg>
+  );
+}
 
 // Numbers sit in a strip under the hero rather than inside it, so the hero
 // stays one message with one primary action.
@@ -37,6 +62,27 @@ const rank = (slug: string) => {
   const index = displayOrder.indexOf(slug);
   return index === -1 ? displayOrder.length : index;
 };
+
+/** Same shape as ProjectCard's motif line, plus a fill and an endpoint dot
+    for the one card on the page that has room to spare for them. Kept as
+    its own small function rather than shared with ProjectCard's, since the
+    two are visually different enough (filled area vs. plain line) that
+    sharing one helper would mean threading options through it for no real
+    reuse. */
+function blogSparkPath(values: number[]) {
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const span = max - min || 1;
+  const points = values.map((value, index) => {
+    const x = (index / (values.length - 1)) * 160;
+    const y = 58 - ((value - min) / span) * 50;
+    return { x, y };
+  });
+  const line = points.map((p, i) => `${i === 0 ? "M" : "L"}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
+  const fill = `${line} L160,76 L0,76 Z`;
+  const last = points[points.length - 1];
+  return { line, fill, last };
+}
 
 // Cell sizing and tone per project. One cell per project, no filler tile.
 const layout: Record<string, { span: string; tone: CardTone }> = {
@@ -92,6 +138,7 @@ export default function Home() {
         {/* Hero. One eyebrow, one headline, one sentence, two actions. */}
         <section className="relative overflow-hidden pt-16 pb-20 sm:pt-24 sm:pb-28">
           <Glow />
+          <HeroSignal />
           <div className="relative mx-auto max-w-6xl px-5 sm:px-8">
             {/* Delays are set here rather than by a wrapper, so the headline can
                 run its own word stagger without a block fade layered over it. */}
@@ -121,8 +168,12 @@ export default function Home() {
               className="rise-in mt-9 flex flex-wrap gap-3"
               style={{ animationDelay: "0.65s" }}
             >
-              <ActionLink href="/#work">See the work</ActionLink>
-              <GhostLink href={`mailto:${site.email}`}>Get in touch</GhostLink>
+              <Magnetic>
+                <ActionLink href="/#work">See the work</ActionLink>
+              </Magnetic>
+              <Magnetic>
+                <GhostLink href={`mailto:${site.email}`}>Get in touch</GhostLink>
+              </Magnetic>
             </div>
           </div>
         </section>
@@ -193,31 +244,57 @@ export default function Home() {
             <Reveal delay={updates.length * 0.04} className="mt-6">
               <Link
                 href={`/blog/${latestPost.slug}/`}
-                className="group block rounded-[22px] bg-surface p-5 ring-1 ring-hairline ring-inset transition-transform duration-500 ease-soft hover:-translate-y-px sm:p-6"
+                className="group flex items-center justify-between gap-6 rounded-[22px] bg-surface p-5 ring-1 ring-hairline ring-inset transition-transform duration-500 ease-soft hover:-translate-y-px sm:p-6"
               >
-                <p className="font-mono text-[0.65rem] tracking-[0.15em] text-accent uppercase">
-                  Latest from the blog
-                </p>
-                <p className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                  <span className="font-display text-lg font-semibold tracking-tight text-ink">
-                    {latestPost.title}
+                <div>
+                  <p className="font-mono text-[0.65rem] tracking-[0.15em] text-accent uppercase">
+                    Latest from the blog
+                  </p>
+                  <p className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                    <span className="font-display text-lg font-semibold tracking-tight text-ink">
+                      {latestPost.title}
+                    </span>
+                    <span className="font-mono text-[0.72rem] text-muted">
+                      {formatDate(latestPost.date)} &middot; {latestPost.readingMinutes} min read
+                    </span>
+                  </p>
+                  <p className="mt-2 max-w-[62ch] leading-relaxed text-muted">
+                    {latestPost.summary}
+                  </p>
+                  <span className="mt-3 inline-flex items-center gap-1.5 font-display text-[0.88rem] font-medium text-accent">
+                    Read it
+                    <ArrowRight
+                      size={13}
+                      weight="bold"
+                      aria-hidden
+                      className="transition-transform duration-500 ease-soft group-hover:translate-x-1"
+                    />
                   </span>
-                  <span className="font-mono text-[0.72rem] text-muted">
-                    {formatDate(latestPost.date)} &middot; {latestPost.readingMinutes} min read
-                  </span>
-                </p>
-                <p className="mt-2 max-w-[62ch] leading-relaxed text-muted">
-                  {latestPost.summary}
-                </p>
-                <span className="mt-3 inline-flex items-center gap-1.5 font-display text-[0.88rem] font-medium text-accent">
-                  Read it
-                  <ArrowRight
-                    size={13}
-                    weight="bold"
-                    aria-hidden
-                    className="transition-transform duration-500 ease-soft group-hover:translate-x-1"
-                  />
-                </span>
+                </div>
+
+                {latestPost.sparkline ? (
+                  (() => {
+                    const spark = blogSparkPath(latestPost.sparkline!);
+                    return (
+                      <svg
+                        viewBox="0 0 160 76"
+                        className="hidden h-16 w-36 shrink-0 sm:block"
+                        aria-label={`Trend from the post: ${latestPost.sparkline![0]} to ${latestPost.sparkline![latestPost.sparkline!.length - 1]}`}
+                      >
+                        <path d={spark.fill} fill="var(--color-accent)" opacity="0.14" />
+                        <path
+                          d={spark.line}
+                          fill="none"
+                          stroke="var(--color-accent)"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <circle cx={spark.last.x} cy={spark.last.y} r="3" fill="var(--color-accent)" />
+                      </svg>
+                    );
+                  })()
+                ) : null}
               </Link>
             </Reveal>
           ) : null}
@@ -268,10 +345,10 @@ export default function Home() {
             </h2>
           </Reveal>
 
-          <ol className="mt-10">
+          <ol className="mt-10 border-l-2 border-tint pl-5 sm:pl-6">
             {roles.map((entry, index) => (
               <Reveal key={entry.title} delay={index * 0.06}>
-                <li className="grid gap-3 border-t border-hairline py-8 sm:grid-cols-[9rem_1fr] sm:gap-10">
+                <li className="grid gap-3 py-8 first:pt-0 sm:grid-cols-[9rem_1fr] sm:gap-10">
                   <p className="font-mono text-[0.7rem] tracking-[0.15em] text-muted uppercase sm:pt-1.5">
                     {entry.period}
                   </p>

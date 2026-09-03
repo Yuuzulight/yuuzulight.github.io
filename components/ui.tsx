@@ -98,7 +98,7 @@ export function Shell({
     <div
       className={`rounded-[30px] p-[7px] ring-1 ring-hairline ring-inset ${trays[tone]} ${className}`}
     >
-      <div className="h-full rounded-[23px] bg-surface p-6 shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] sm:p-7">
+      <div className="h-full rounded-[23px] bg-surface p-6 shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] sm:p-7 dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.07)]">
         {children}
       </div>
     </div>
@@ -109,8 +109,8 @@ export function Shell({
 export function Glow() {
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-      <div className="absolute -top-72 -left-56 size-[760px] rounded-full bg-[radial-gradient(circle_at_center,rgba(196,190,244,0.55)_0%,transparent_66%)]" />
-      <div className="absolute -top-56 -right-72 size-[820px] rounded-full bg-[radial-gradient(circle_at_center,rgba(146,120,226,0.32)_0%,transparent_64%)]" />
+      <div className="absolute -top-72 -left-56 size-[760px] rounded-full bg-[radial-gradient(circle_at_center,rgba(196,190,244,0.55)_0%,transparent_66%)] dark:bg-[radial-gradient(circle_at_center,rgba(90,70,150,0.4)_0%,transparent_66%)]" />
+      <div className="absolute -top-56 -right-72 size-[820px] rounded-full bg-[radial-gradient(circle_at_center,rgba(146,120,226,0.32)_0%,transparent_64%)] dark:bg-[radial-gradient(circle_at_center,rgba(70,50,120,0.32)_0%,transparent_64%)]" />
     </div>
   );
 }

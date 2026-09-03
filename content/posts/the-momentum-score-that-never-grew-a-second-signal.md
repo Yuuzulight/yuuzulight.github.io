@@ -4,6 +4,7 @@ date: 2026-08-21
 summary: Hecate's growth windows filled right on schedule a week after launch. The raw momentum score built on top of them still ties five unrelated repositories at a cap, and the fix for that lives in a dashboard query, not in the underlying data.
 tags: ["hecate", "data-engineering", "sql"]
 draft: false
+sparkline: [2010, 2012, 2013, 2022, 2029, 2033, 2035, 2042, 2046, 2064, 2068, 2075, 2079]
 ---
 
 On 2026-08-07, Hecate had exactly one day of snapshot history for every repository it
