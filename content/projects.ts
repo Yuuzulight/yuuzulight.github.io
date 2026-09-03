@@ -50,17 +50,17 @@ export const projects: Project[] = [
     name: "Hecate",
     kind: "Repository intelligence platform",
     blurb:
-      "Tracks which software projects are actually growing, by joining package and repo data against what people are saying about them.",
-    lede: "Star counts are a bad proxy for whether a project is alive. Hecate collects repository and package data from four sources, collects discussion from two more, and keeps a daily snapshot so growth can be measured rather than guessed.",
-    status: "v1.2.0, running unattended on a daily schedule",
+      "Tracks which software projects are actually growing, and answers plain-English questions about the trends, grounded in SQL against its own warehouse rather than a similarity search.",
+    lede: "Star counts are a bad proxy for whether a project is alive. Hecate collects repository and package data from four sources, collects discussion from two more, and keeps a daily snapshot so growth can be measured rather than guessed. A forecasting stage predicts where a repository is headed next, and a question-answering service on top answers plain-English questions about the whole warehouse.",
+    status: "v2.0.0, running unattended on a daily schedule, RAG-backed Q&A verified live",
     size: "wide",
     // Repositories tracked per daily snapshot, 7-20 Aug 2026 -- the same
     // series charted in the momentum post, reused rather than re-derived.
     motif: [2010, 2012, 2013, 2022, 2029, 2033, 2035, 2042, 2046, 2064, 2068, 2075, 2079],
     metrics: [
-      { value: "63", label: "dbt models in the transform layer" },
-      { value: "6", label: "upstream sources normalised to one schema" },
-      { value: "32", label: "issues closed to reach v1.2.0" },
+      { value: "9", label: "dbt models, 54 tests, 63 nodes total" },
+      { value: "21", label: "panels on the Grafana dashboard" },
+      { value: "0.92", label: "mean faithfulness on the RAG evaluation harness" },
     ],
     stack: [
       "Python",
@@ -70,6 +70,9 @@ export const projects: Project[] = [
       "Docker",
       "Prometheus",
       "Grafana",
+      "Redis",
+      "FastAPI",
+      "LangChain",
     ],
     problem: [
       "A repository with 60,000 stars and no commits in three years is a different thing from one with 8,000 stars and weekly releases, but most tooling treats them as comparable. Download counts say more about real use than either, and discussion says something different again, usually earlier.",
@@ -80,10 +83,13 @@ export const projects: Project[] = [
       "A transformer normalises everything to a single schema, then loads into PostgreSQL idempotently. A run that dies halfway through can just be run again, which matters more than it sounds when the whole thing is unattended.",
       "Posts about projects Hecate does not yet track are the interesting case. They are not discarded. They are kept, ranked, and the projects behind them get fetched and added, so discussion decides what gets tracked rather than the other way round.",
       "Every tracked project is snapshotted daily. That table is the only history in the system, and it is the only reason growth can be measured at all, because everything else describes the present and upserts in place.",
-      "dbt turns the raw tables into staging views, then facts, dimensions, growth and momentum models. Grafana reads the result, Prometheus watches the jobs, and alerts fire when a run does not land.",
+      "dbt turns the raw tables into staging views, then facts, dimensions, growth and momentum models: nine models backed by fifty-four tests. Grafana reads the result across 21 panels, Prometheus watches the jobs, and alerts fire when a run does not land.",
+      "A forecasting stage predicts each repository's star count a week out, gated by a confidence check so a forecast that has not cleared the bar is written as NULL rather than shown as if it were real, with its own backtest tool that checks predictions against what actually happened.",
+      "A question-answering service sits on top, provider-selectable across Gemini, Anthropic and OpenAI. Answers are built from SQL against the analytics models rather than a similarity search, since the questions people ask are aggregates and the whole corpus is small enough that picking the right rows beats finding similar ones. Every citation is checked against what the model was actually shown before it reaches the caller, and an evaluation harness scores whether the answer is grounded at all.",
     ],
     outcome: [
-      "The platform reached v1.2.0 with all 32 tracked issues closed, and now runs on a daily schedule without anyone starting it. The Grafana dashboard exposes 15 panels on anonymous read, so the data is inspectable without an account.",
+      "The platform reached v2.0.0. All six sources collect, dbt rebuilds the models daily, and the whole thing runs unattended with alerting and nightly backups. The Grafana dashboard now exposes 21 panels on anonymous read, up from the 15 it shipped with, including a forecast panel for the newest stage.",
+      "The question-answering service is deployed with all three providers verified end to end, env vars, auth, request routing, and the Anthropic path has cleared a full evaluation run against real production data: 0.92 mean faithfulness and zero hallucinations across a fixed question set, graded by a second model call rather than self-reported.",
     ],
     lessons: [
       {
@@ -116,7 +122,7 @@ export const projects: Project[] = [
     metrics: [
       { value: "96,646", label: "rows in the training set" },
       { value: "99.86%", label: "F1 on its own held-out split" },
-      { value: "$1.20", label: "spent on rented GPU training" },
+      { value: "$1.20", label: "spent across three rented-GPU training runs" },
     ],
     stack: [
       "PyTorch",
@@ -134,19 +140,20 @@ export const projects: Project[] = [
     architecture: [
       "The data pipeline handles fetching, generation and splitting. Sample generation tracks spend against a budget and writes a manifest, so an interrupted run resumes instead of restarting and re-billing.",
       "Splitting uses a group-aware strategy from scikit-learn, because HC3's human and AI answers come in pairs. A naive random split puts one half of a pair in train and the other in test, and the resulting score measures leakage rather than learning.",
-      "Training ran on rented GPUs, two full runs, under $1.20 in total compute.",
+      "Training ran on rented GPUs across three runs, under $1.20 in total compute: an early NaN-loss run while debugging precision handling, a second run that silently trained without a GPU at all because a driver/CUDA mismatch made torch.cuda.is_available() report False, and a third run on a compatible instance that converged normally.",
       "Serving is a FastAPI application in a Docker container on a DigitalOcean droplet, with Caddy terminating TLS and pulling certificates from Let's Encrypt automatically.",
       "Registration on the protocol meant setting up an EVM wallet, funding it on a testnet, and submitting an on-chain transaction to activate the service as a node for the text-detection intent.",
     ],
     outcome: [
       "The model reports 99.86% F1 on its own held-out test set, and the deployed service is registered and active on the protocol. I verified the registration by querying the protocol's own backend and checking the wallet's transaction nonce, rather than trusting the success message the tooling returned.",
+      "That 99.86% is from the second training run, not the first. The checkpoint originally deployed had silently trained without a GPU at all: a driver only supported CUDA 12.4 while the pinned PyTorch build defaulted to a CUDA 13 wheel, so torch.cuda.is_available() returned False and training proceeded on CPU thinking it had an accelerator, with no metrics saved to catch it. Confidence never left roughly a 0.5-0.7 band, even on the opening line of Pride and Prejudice. Loading the deployed checkpoint directly and testing it against unambiguous input caught it; a retrain on a compatible instance converged normally and was verified three separate ways before redeploy: the saved test metrics, ten sampled held-out rows scored straight from the checkpoint, and six requests against the live redeployed endpoint.",
       "Then I built Veracia, a separate evaluation harness with an independently constructed holdout, and pointed it at the live deployment. It found that the score does not survive contact with text outside the training distribution: recall dropped to 0.042, catching one of 24 AI samples, and the 23 misses were returned as human with 0.98 or higher confidence. Across a wider cross-model set, 38 of 100 clearly-AI samples came back as human.",
       "The model had learned a narrower rule than the metric implied, roughly \"call it human unless it looks like the training data\". That is a real result about the project, and it is the reason the F1 figure on this page is always stated against its own split.",
     ],
     lessons: [
       {
         title: "Verify runtime state, not configured intent",
-        body: "Training loss went to NaN almost immediately. Five hypotheses in a row failed: the precision config, learning-rate warmup, dataloader workers, the attention implementation. The actual cause was that the model loader was silently returning float16 weights regardless of the training flag that was supposed to control precision. I only found it by inspecting the dtype of a loaded tensor directly. The fix was one parameter. The habit it produced is worth more than the fix.",
+        body: "Training loss went to NaN almost immediately. Five hypotheses in a row failed: the precision config, learning-rate warmup, dataloader workers, the attention implementation. The actual cause was that the model loader was silently returning float16 weights regardless of the training flag that was supposed to control precision. I only found it by inspecting the dtype of a loaded tensor directly. The fix was one parameter. The habit it produced is worth more than the fix. It paid off again later: a second, unrelated run had torch.cuda.is_available() silently return False on a driver/CUDA mismatch, trained on CPU while believing it had a GPU, and shipped a degenerate checkpoint that nothing caught because the run's metrics were never saved. Same category of bug, same fix, checking what the code actually did rather than what it was told to do.",
       },
       {
         title: "Some bugs only appear statistically",
@@ -222,15 +229,16 @@ export const projects: Project[] = [
     blurb:
       "A Windows desktop assistant that listens, replies out loud and reads the screen, with every model running on the local machine.",
     lede: "A desktop companion built to find out how close a local assistant can get to feeling like a person rather than a prompt box. It listens, answers out loud, remembers, watches the screen and has a face, with every model running on the machine itself.",
-    status: "v0.2.0 developer preview, actively developed",
+    status: "v0.3.0 developer preview, actively developed",
     size: "regular",
     metrics: [
       { value: "100%", label: "of default inference running on-device" },
-      { value: "2", label: "Electron apps sharing one Node backend" },
+      { value: "3", label: "client apps built against one Node backend" },
     ],
     stack: [
       "Electron",
       "Node.js",
+      "C#/.NET",
       "llama.cpp",
       "whisper.cpp",
       "Live2D",
@@ -246,10 +254,12 @@ export const projects: Project[] = [
       "Two Electron applications, a launcher and a desktop client, share one Node backend. Any feature has to land in both, which is a constraint the codebase enforces on itself.",
       "Speech in runs through whisper.cpp, replies through llama.cpp, and speech out through a local synthesiser. A vision model plus OCR handle screen awareness, and local web search runs through a self-hosted SearXNG instance.",
       "The avatar is Live2D, rendered in a transparent always-on-top overlay window.",
+      "A third app, a native C#/.NET launcher, is being built alongside the two Electron ones to cut the runtime's memory footprint. It already has a full voice loop of its own: real WASAPI mic capture, Silero VAD segmentation, wake-word matching, a barge-in gate, and streaming reply playback, talking to the same Node backend over HTTP. It is not yet the default; the Electron launcher stays the supported path until it reaches feature parity.",
       "Code is Apache-2.0. The artwork and avatar assets are not, and the Live2D runtime is fetched at setup under its own licence rather than vendored into the repository.",
     ],
     outcome: [
       "The project is a working developer preview rather than a finished product. Voice conversation, local memory, screen reading and the avatar all function on a real Windows setup, and the release notes are honest about which parts are still rough.",
+      "The native launcher is further along than the repo's own planning doc admits: it still lists native mic capture as a future step, while the code sitting next to it already does mic capture, VAD, wake-word matching and streaming playback, with its own test suite and Cubism avatar rendering including idle motion and mood-driven expressions, and commits landing on it the same week this was written. Undersold, not oversold, which is the direction I'd rather be wrong in.",
     ],
     lessons: [
       {
@@ -273,12 +283,12 @@ export const projects: Project[] = [
     kind: "Voice training tool",
     blurb:
       "Records a take, analyses it with real acoustic measures, and shows the results as trackable metrics rather than a verdict.",
-    lede: "A voice-feminization training tool. You read a passage, it analyses the recording locally and surfaces pitch, resonance, steadiness and vocal weight as metrics you can track across takes. It ships as a Windows desktop app and a browser version from the same interface code.",
-    status: "Shipped, Windows installer and web app",
+    lede: "A voice-feminization training tool. You read a passage, it analyses the recording locally and surfaces pitch, resonance, steadiness and vocal weight as metrics you can track across takes. It ships as a Windows desktop app and a browser version from the same interface code, the browser one audited down to phone width rather than just assumed to work.",
+    status: "Shipped, Windows installer and web app, mobile-audited",
     size: "regular",
     metrics: [
       { value: "8", label: "themes, three light and five dark" },
-      { value: "2", label: "delivery targets from one UI codebase" },
+      { value: "320px", label: "narrowest viewport checked by the responsive audit" },
     ],
     stack: [
       "Electron",
@@ -297,9 +307,11 @@ export const projects: Project[] = [
       "One React and TypeScript interface serves both targets. The desktop app wraps it in Electron with auto-updating, and the browser build runs the analysis path compiled to WebAssembly.",
       "The dashboard reports pitch, resonance from formants, loudness, steadiness from jitter and shimmer, vocal weight, and a breakdown of where the voice sits relative to a target range. Each card explains what it measures and which direction is which.",
       "Written insights are generated from the metrics directly, with an optional path to richer AI-written commentary for anyone who supplies their own key.",
+      "The browser build carries an automated responsive audit across eight viewports down to 320px wide, checking horizontal overflow, chart label legibility, 44px touch targets, and modal reachability with plain assertions rather than screenshots for a human to squint at.",
     ],
     outcome: [
       "Euphonia is published as a Windows installer with background auto-updates, and as a browser version that needs no install. Recordings and results stay in the user's own folder on desktop.",
+      "The mobile claim in the README was wrong once, and got caught by the same audit meant to prove it. The first pass tested empty state only, recordings.json shipped as [] and the theme screenshots captured a blank page, so chart labels rendering at 3px on a populated dashboard went unnoticed. Seeding real takes before auditing surfaced it, the layout and touch targets got fixed, and the README now says exactly what was checked and by what, including that viewport emulation is not a real handset and that microphone capture specifically has not been verified on physical hardware.",
     ],
     lessons: [
       {
@@ -309,6 +321,10 @@ export const projects: Project[] = [
       {
         title: "One codebase, two runtimes, one honest limitation",
         body: "Sharing the interface between Electron and the browser worked well. Being straightforward in the documentation about what is not there, including the unbuilt macOS target and the unsigned installer warning, turned out to be better than papering over it.",
+      },
+      {
+        title: "An audit of an empty state is not an audit",
+        body: "The first responsive pass ran clean across every viewport, which felt like proof mobile worked. It was proof an empty dashboard fits on a small screen. No seed data meant no populated charts, so 3px chart labels on a real take sat undetected behind a passing test. Fixing it meant seeding real takes before auditing, not just widening the viewport list.",
       },
     ],
     links: [
@@ -323,12 +339,12 @@ export const projects: Project[] = [
     name: "Data Artisan",
     kind: "Agent skills for data engineering",
     blurb:
-      "Portable skill files that teach coding agents the production data patterns they otherwise skip, like indexing, partitioning and quality checks.",
-    lede: "Ask a coding agent for a database schema and you get working code. You often do not get the indexes, the partition strategy, or the data quality checks, because nothing in the request said the thing has to survive contact with a terabyte. Data Artisan is a set of skill files that supply that missing context.",
-    status: "Published, MIT licensed, CI green",
+      "One portable skill file that teaches coding agents production-grade SQL schema design, the first of nine planned skills covering data patterns agents otherwise skip.",
+    lede: "Ask a coding agent for a database schema and you get working code. You often do not get the indexes, the partition strategy, or the data quality checks, because nothing in the request said the thing has to survive contact with a terabyte. Data Artisan is a set of skill files meant to supply that missing context, one skill at a time rather than all at once.",
+    status: "One of nine planned skills shipped, MIT licensed, CI green",
     size: "regular",
     metrics: [
-      { value: "5", label: "skills covering schema, ETL, quality and analytics" },
+      { value: "1", label: "of 9 planned skills shipped: schema design" },
       { value: "MIT", label: "licensed and portable across agents" },
     ],
     stack: ["SQL", "PostgreSQL", "dbt", "DuckDB", "Agent Skills", "Markdown"],
@@ -337,23 +353,23 @@ export const projects: Project[] = [
       "The gap is not the model's ability to write SQL. It is that nobody told it which patterns separate a working schema from a production one.",
     ],
     architecture: [
-      "Each skill is a single portable file describing the patterns and the reasoning behind them, in a format agents can load directly.",
-      "Schema design covers indexing, partitioning and data type strategy across Postgres, Snowflake and BigQuery. The ETL library covers slowly changing dimensions, incremental loads and full refreshes with idempotency.",
-      "The quality skill generates dbt tests, Great Expectations suites or plain SQL validation for completeness, uniqueness and referential integrity. Two further skills cover DuckDB analytics patterns and running against local models.",
-      "Because the files are plain and portable, they work in several agent tools rather than being tied to one vendor, and they can be pasted directly if the tooling is not supported.",
+      "The one shipped skill is a single portable file describing schema design patterns and the reasoning behind them, in a format agents can load directly: indexing and partitioning strategy, constraints as defense rather than app-level validation, and per-database guidance across Postgres, Snowflake and BigQuery.",
+      "Because the file is plain and portable, it works in several agent tools (Claude Code, Cursor, Codex) rather than being tied to one vendor, and it can be pasted directly if the tooling is not supported.",
+      "Eight more skills are on the roadmap and not yet built: an ETL pattern library, a data quality framework, DuckDB and analytics, a local AI data stack, Kafka and streaming, advanced dbt patterns, data governance, and cloud cost optimisation. The README lists them as a roadmap, not a feature list, on purpose.",
     ],
     outcome: [
-      "The repository is published under MIT with continuous integration running against it, and the skills install through the agent skills CLI or by copying the file.",
+      "The repository is published under MIT with a markdown-lint CI workflow running against it. One skill, schema design, installs through the agent skills CLI or by copying the file; the other eight are documented as planned, not implied as shipped.",
     ],
     lessons: [
       {
         title: "Writing the patterns down exposed the ones I was improvising",
-        body: "Turning working knowledge into instructions another system has to follow is a good way to discover which parts were habit rather than reasoning. Several skills got substantially clearer once I had to justify each rule instead of just applying it.",
+        body: "Turning working knowledge into instructions another system has to follow is a good way to discover which parts were habit rather than reasoning. The one skill that exists got substantially clearer once I had to justify each rule instead of just applying it.",
       },
     ],
     links: [
       { label: "Source on GitHub", href: "https://github.com/Yuuzulight/db-artisan", kind: "code" },
     ],
+    note: "One skill exists today, schema design. The other eight named in the architecture above are a roadmap, not shipped work. I'm listing the project now because the one skill that exists is real and used, not because the whole set is built.",
   },
 
   {
