@@ -141,6 +141,11 @@ export type Update = {
 // five entries is plenty.
 export const updates: Update[] = [
   {
+    date: "2026-09-03",
+    text: "A correct SSRF hostname guard in Mana's plugin store failed CodeQL's scan through three rewrites before a plain === chain instead of Set.has() finally moved it; a path-traversal check in the same file needed the same exact-shape fix.",
+    href: "/blog/the-ssrf-check-that-codeql-refused-to-recognize/",
+  },
+  {
     date: "2026-08-25",
     text: "Mana's fish-speech TTS server needed WSL2 because torch.compile was supposedly unsupported on native Windows. It was two fixable bugs, a stale triton-windows pin and a CUDA pointer overflow, and fixing them left native Windows 1.3-1.8x faster.",
     href: "/blog/the-static-launcher-that-couldnt-fit-a-pointer/",
@@ -159,10 +164,5 @@ export const updates: Update[] = [
     date: "2026-08-21",
     text: "Consolidated Mana's chat and vision onto one model after a same-day benchmark showed the chat model already beat both vision candidates outright, deleting a second model instead of picking between them.",
     href: "/blog/the-vision-model-that-didnt-need-to-exist/",
-  },
-  {
-    date: "2026-08-21",
-    text: "Hecate's growth windows filled right on schedule a week after launch, but the momentum ranking built on top of them didn't follow: only 32 of 2,068 rows use two signals, and none use all three.",
-    href: "/blog/the-momentum-score-that-never-grew-a-second-signal/",
   },
 ];
