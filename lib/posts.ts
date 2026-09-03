@@ -3,6 +3,8 @@ import path from "node:path";
 import matter from "gray-matter";
 import { marked } from "marked";
 
+export { formatDate } from "./formatDate";
+
 const postsDir = path.join(process.cwd(), "content", "posts");
 
 export type PostMeta = {
@@ -78,16 +80,4 @@ export function getPosts(): Post[] {
 
 export function getPost(slug: string): Post | undefined {
   return getPosts().find((post) => post.slug === slug);
-}
-
-export function formatDate(iso: string): string {
-  if (!iso) return "";
-  const date = new Date(`${iso}T00:00:00Z`);
-  if (Number.isNaN(date.getTime())) return iso;
-  return date.toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    timeZone: "UTC",
-  });
 }

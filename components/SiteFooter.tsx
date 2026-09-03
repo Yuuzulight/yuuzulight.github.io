@@ -1,10 +1,12 @@
 import { GithubLogo, EnvelopeSimple } from "@phosphor-icons/react/dist/ssr";
+import { getPosts } from "@/lib/posts";
 import { site } from "@/content/site";
 
 export function SiteFooter() {
-  // Rendered at build time. The deploy workflow runs on every push, so this
-  // does not go stale the way a hardcoded year does.
+  // Both rendered at build time. The deploy workflow runs on every push, so
+  // neither goes stale the way a hardcoded year or post count would.
   const year = new Date().getFullYear();
+  const postCount = getPosts().length;
 
   return (
     <footer id="contact" className="relative border-t border-hairline">
@@ -41,7 +43,10 @@ export function SiteFooter() {
           <p>
             {year} {site.handle}. {site.education}.
           </p>
-          <p>Built with Next.js and deployed on GitHub Pages.</p>
+          <p>
+            {postCount} post{postCount === 1 ? "" : "s"} published. Built with Next.js, deployed
+            on GitHub Pages.
+          </p>
         </div>
       </div>
     </footer>

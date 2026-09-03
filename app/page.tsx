@@ -8,6 +8,7 @@ import { ProjectCard, type CardTone } from "@/components/ProjectCard";
 import { CountUp } from "@/components/CountUp";
 import { Headline } from "@/components/Headline";
 import { Magnetic } from "@/components/Magnetic";
+import { PostSpark } from "@/components/PostSpark";
 import { Reveal } from "@/components/Reveal";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteNav } from "@/components/SiteNav";
@@ -62,27 +63,6 @@ const rank = (slug: string) => {
   const index = displayOrder.indexOf(slug);
   return index === -1 ? displayOrder.length : index;
 };
-
-/** Same shape as ProjectCard's motif line, plus a fill and an endpoint dot
-    for the one card on the page that has room to spare for them. Kept as
-    its own small function rather than shared with ProjectCard's, since the
-    two are visually different enough (filled area vs. plain line) that
-    sharing one helper would mean threading options through it for no real
-    reuse. */
-function blogSparkPath(values: number[]) {
-  const min = Math.min(...values);
-  const max = Math.max(...values);
-  const span = max - min || 1;
-  const points = values.map((value, index) => {
-    const x = (index / (values.length - 1)) * 160;
-    const y = 58 - ((value - min) / span) * 50;
-    return { x, y };
-  });
-  const line = points.map((p, i) => `${i === 0 ? "M" : "L"}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
-  const fill = `${line} L160,76 L0,76 Z`;
-  const last = points[points.length - 1];
-  return { line, fill, last };
-}
 
 // Cell sizing and tone per project. One cell per project, no filler tile.
 const layout: Record<string, { span: string; tone: CardTone }> = {
@@ -273,27 +253,7 @@ export default function Home() {
                 </div>
 
                 {latestPost.sparkline ? (
-                  (() => {
-                    const spark = blogSparkPath(latestPost.sparkline!);
-                    return (
-                      <svg
-                        viewBox="0 0 160 76"
-                        className="hidden h-16 w-36 shrink-0 sm:block"
-                        aria-label={`Trend from the post: ${latestPost.sparkline![0]} to ${latestPost.sparkline![latestPost.sparkline!.length - 1]}`}
-                      >
-                        <path d={spark.fill} fill="var(--color-accent)" opacity="0.14" />
-                        <path
-                          d={spark.line}
-                          fill="none"
-                          stroke="var(--color-accent)"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <circle cx={spark.last.x} cy={spark.last.y} r="3" fill="var(--color-accent)" />
-                      </svg>
-                    );
-                  })()
+                  <PostSpark values={latestPost.sparkline} className="hidden h-16 w-36 sm:block" />
                 ) : null}
               </Link>
             </Reveal>
