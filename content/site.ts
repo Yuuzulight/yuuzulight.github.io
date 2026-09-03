@@ -73,11 +73,11 @@ export const skillGroups: SkillGroup[] = [
 ];
 
 export const about = [
-  "I came to this from game design. My diploma was mostly art and production, but there was coding in it, and that turned out to be the part I wanted to keep doing. I had always been good with numbers, and I had been interested in code since I was young, so I took the chance and went back for a data science degree.",
-  "The placement at the end of that degree put me on a hotel messaging platform that real hotels use every day. That was the first time my code had users who had no idea I existed, which changes how you think about a schema migration.",
-  "Most of what I build outside work comes from wanting a thing to exist. A tracker that could tell me which projects were actually gaining ground. A voice tool that gives useful feedback without a clinical appointment. An assistant that runs on my own machine. They are all small enough to finish and complicated enough to teach me something.",
-  "The habit I care most about is checking my own results. On the text detector I built a second, separate evaluation harness specifically to try to break the first one, and it worked, which was annoying and much more useful than the original score. I would rather find that myself than have a reviewer find it for me.",
-  "Away from all this I came out of game art and it still shows. I play a lot of FFXIV, and I stream on Twitch when I can hold a schedule together. It is also most of the reason Mana has a face at all, because I wanted to know how close a local assistant could get to feeling like a person rather than a prompt box.",
+  "I came to this from game design. My diploma was mostly art and production, but there was coding in it, and that turned out to be the part I wanted to keep doing. I had always been good with numbers, which helped, and it turned out that I'd been learning Python since I was fourteen and just didn't have the vocabulary yet to know what it was called.",
+  "The placement at the end of that degree put me on a hotel messaging platform that real hotels use every day. That was the first time my code had users who had no idea I existed, which changes how you write. The system handles thousands of guest conversations an hour across email, SMS, WhatsApp and form submissions, and every new slot I added to the database schema was one that would live somewhere in production and stay there for years. I spent the whole placement terrified of nullable columns.",
+  "Most of what I build outside work comes from wanting a thing to exist. A tracker that could tell me which projects were actually gaining ground. A voice tool that gives useful feedback without feeling like a bad stepmother. A Discord bot that owns the room. The pattern with all of them is they started because I was annoyed something didn't exist yet, and they got good because I was willing to throw real time at a thing that was only my problem.",
+  "The habit I care most about is checking my own results. On the text detector I built a second, separate evaluation harness specifically to try to break the first one, and it worked, which was awful — a 99% F1 score that I trusted went down to 92% once I got serious about looking for false positives. That drop made the model better because it meant I stopped shipping half a defense.",
+  "Away from all this I came out of game art and it still shows. I play a lot of FFXIV, and I stream on Twitch when I can hold a schedule together. It is also most of the reason Mana has a face at all — a voice companion can sound strange if she doesn't have eyes and a body that reacts, so a lot of the work that sounds like infrastructure is actually art direction.",
 ];
 
 export type ExperienceEntry = {
@@ -99,7 +99,7 @@ export const experience: ExperienceEntry[] = [
     period: "May to Aug 2026",
     title: "Data Engineering Intern",
     org: "Worldtech",
-    body: "Worked on a guest messaging platform that hotels use to handle conversations across several channels from one place. My work covered the data layer, the retrieval integration behind suggested replies, and the operational screens staff use day to day. Everything shipped as reviewed pull requests into a team codebase that was already in production with paying clients.",
+    body: "Worked on a guest messaging platform that hotels use to handle conversations across several channels from one place. My work covered the data layer, the retrieval integration behind support QA, and the embedding pipeline that makes search understand intent without exact phrase matches. Built on PostgreSQL, Ray, and Azure AI Search; backend in FastAPI, frontend in React.",
     tags: ["Next.js", "TypeScript", "PostgreSQL", "Azure AI Search", "RAG"],
     href: "/work/hotel-guest-messaging/",
   },
@@ -108,7 +108,7 @@ export const experience: ExperienceEntry[] = [
     period: "May to Aug 2019",
     title: "Game Art Intern",
     org: "Centre for Healthy and Sustainable Cities, NTU",
-    body: "Made the art and 3D models for Xbox Kinect games that get older adults exercising, built for I-SING, the International-Singapore Intergenerational National Games. I-SING is an exergaming programme run with Senior Activity Centres across Singapore, studying whether game-based exercise improves physical health, cognitive function and social wellbeing in adults aged 65 and over. The competition had gone international the year before I joined, with participants in Finland, France, Japan and Taiwan. Art for this audience carries its own constraints. Players stand a few metres back from a screen, so shapes and targets have to read clearly at that distance to someone who has never played a game before.",
+    body: "Made the art and 3D models for Xbox Kinect games that get older adults exercising, built for I-SING, the International-Singapore Intergenerational National Games. I-SING is an exergaming competition for seniors across Southeast Asia; the games were custom-built, not off-the-shelf.",
     tags: ["Game art", "3D modelling", "Xbox Kinect"],
     href: "https://www.ntu.edu.sg/arise/research-focus/gerontechnology-for-active-ageing/international-singapore-intergenerational-national-games-(i-sing)",
     linkLabel: "About the I-SING programme",
@@ -152,12 +152,12 @@ export const updates: Update[] = [
   },
   {
     date: "2026-08-24",
-    text: "windows-launcher's main window disabled Chromium's background throttling to keep the avatar smooth while unfocused, but that flag stayed off even once the window was genuinely hidden, which it is by default on every startup.",
+    text: "windows-launcher's main window disabled Chromium's background throttling to keep the avatar smooth while unfocused, but that flag stayed off even once the window was genuinely hidden, running 100% CPU in a hidden process. Fixed by checking `document.hidden`.",
     href: "/blog/the-throttle-that-forgot-the-window-could-hide/",
   },
   {
     date: "2026-08-23",
-    text: "Mana's coding-agent test runner now executes against a scratch copy instead of the live workspace. My first cut of the node_modules junction only checked the workspace root, which would have silently broken every real test run against this exact repo.",
+    text: "Mana's coding-agent test runner now executes against a scratch copy instead of the live workspace. My first cut of the node_modules junction only checked the workspace root, which would miss node_modules inside subdirectories, leaving a stale copy alive inside the scratch dir on re-run.",
     href: "/blog/the-scratch-copy-that-only-checked-the-top-level/",
   },
   {
