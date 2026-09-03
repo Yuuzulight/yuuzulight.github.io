@@ -361,12 +361,12 @@ export const projects: Project[] = [
     name: "Argos",
     kind: "Desktop widget engine",
     blurb:
-      "A from-scratch Rainmeter-style widget engine for Windows: the rendering and window engine is merged into main, and the skin format with its first widgets is built and awaiting merge.",
-    lede: "A native Win32 and Direct2D desktop widget engine, in the spirit of Rainmeter: transparent, always-on-top windows that draw live system data like a clock, CPU, RAM and disk usage, configured through a plain-text skin format. Component 1, the rendering and window engine, is merged into main behind CI. Component 2, the skin format with its parser and first four measures and two meters, is built and working on its own branch, reviewed but not yet merged, and this page says exactly that rather than rounding it up to finished or down to not started.",
-    status: "Component 1 of 6 merged to main; component 2 built, pending merge",
+      "A from-scratch Rainmeter-style widget engine for Windows: the rendering engine, skin format, and four bundled skins are merged into main, and the manager application is being built on its own branch.",
+    lede: "A native Win32 and Direct2D desktop widget engine, in the spirit of Rainmeter: transparent, always-on-top windows that draw live system data like a clock, CPU, RAM and disk usage, configured through a plain-text skin format. Components 1 through 3, the rendering engine, the skin format, and the four bundled v1 skins, are merged into main behind CI. Component 4, the manager application, is in progress on its own branch: a skin registry that scans a directory and merges rescans, and a manager window that lists skins and hit-tests clicks, reusing the same Direct2D rendering path the widgets themselves use. Two components remain as plan, and this page still says exactly that rather than rounding up.",
+    status: "Components 1-3 of 6 merged to main; component 4 (manager app) in progress on its own branch",
     size: "regular",
     metrics: [
-      { value: "2", label: "of 6 components with real code, 1 merged to main" },
+      { value: "4", label: "of 6 components with real code, 3 merged to main" },
       { value: "0", label: "third-party dependencies beyond the Windows SDK" },
     ],
     stack: ["C++17", "Win32", "Direct2D", "DirectWrite", "CMake", "Inno Setup"],
@@ -380,10 +380,11 @@ export const projects: Project[] = [
       "A widget's position is stored as a monitor plus an offset from that monitor's origin, not a raw virtual-desktop pixel coordinate, so a saved layout still makes sense after monitors get rearranged. Per-monitor DPI awareness is handled by rescaling the render target and repositioning into the rect Windows itself suggests on a DPI change.",
       "The skin format is plain-text and INI-style, conceptually similar to Rainmeter's Measure and Meter split without being byte-compatible with Rainmeter's own syntax. A skin that fails to parse is logged and shown in the manager as failed with a reason, never a crash of the whole app.",
       "Zero third-party dependencies beyond the Windows SDK. The skin format and the persisted application state both reuse the same hand-written INI parser rather than pulling in a second text format for one or the other.",
+      "Component 4 pulls the shared rendering path out into a D2DWindow base class, so the manager window that lists and manages skins draws through the exact same Direct2D setup the widgets themselves use, rather than reaching for a second UI toolkit for the one application window that isn't a widget.",
     ],
     outcome: [
-      "Component 1, the rendering and window engine, merged into main through a CI-gated PR: layered, per-pixel-alpha windows with drag-to-reposition and per-monitor DPI rescaling, running on a real Windows setup rather than just a spec.",
-      "Component 2, the skin format, is built on its own branch: a hand-written INI parser, the skin loader, and the first four measures and two meters (Clock, CPU, RAM and disk usage, rendered as Text or Bar). It passes its own tests and runs in a live demo, but hasn't merged into main yet. Four components remain, each still one GitHub issue, one branch, one PR, gated on the same Windows CI build as the first two.",
+      "Components 1 through 3 are merged into main behind CI: the rendering and window engine (layered, per-pixel-alpha windows with drag-to-reposition and per-monitor DPI rescaling), the skin format with its parser and first four measures and two meters, and four bundled v1 skins, Clock, CPU, RAM and disk usage, that exercise the format end to end rather than just the demo skin used during development.",
+      "Component 4, the manager application, is in progress on its own branch: a skin registry that scans a directory and merges rescans without losing state, and a manager window that renders the skin list and hit-tests clicks, built on the new shared D2DWindow base class. Two components remain, each still one GitHub issue, one branch, one PR, gated on the same Windows CI build as the rest.",
     ],
     lessons: [
       {
@@ -398,7 +399,7 @@ export const projects: Project[] = [
     links: [
       { label: "Source on GitHub", href: "https://github.com/Yuuzulight/Argos", kind: "code" },
     ],
-    note: "Component 1, the rendering and window engine, is merged into main. Component 2, the skin format and its first widgets, is built and working on its own branch, reviewed but not yet merged. Four components are still just a plan. I'm listing it now because the engineering that exists is real, not because the engine as a whole is finished.",
+    note: "Components 1 through 3, the rendering engine, the skin format, and the four bundled skins, are merged into main. Component 4, the manager application, is in progress on its own branch. Two components are still just a plan. I'm listing it now because the engineering that exists is real, not because the engine as a whole is finished.",
   },
 ];
 
