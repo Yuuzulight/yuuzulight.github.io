@@ -156,13 +156,13 @@ export const updates: Update[] = [
     href: "/blog/the-scratch-copy-that-only-checked-the-top-level/",
   },
   {
-    date: "2026-08-21",
-    text: "Consolidated Mana's chat and vision onto one model after a same-day benchmark showed the chat model already beat both vision candidates outright, deleting a second model instead of picking between them.",
-    href: "/blog/the-vision-model-that-didnt-need-to-exist/",
+    date: "2026-08-22",
+    text: "Wiring draft-model speculative decoding into Mana's llama.cpp runtime, a flag left at its own \"auto\" default cost 5x throughput; pinning the draft model's GPU-layer offload to match the target's recovered most of it.",
+    href: "/blog/the-draft-model-that-needed-its-own-gpu-flag/",
   },
   {
     date: "2026-08-21",
-    text: "Hecate's growth windows filled right on schedule a week after launch, but the momentum ranking built on top of them didn't follow: only 32 of 2,068 rows use two signals, and none use all three.",
-    href: "/blog/the-momentum-score-that-never-grew-a-second-signal/",
+    text: "Consolidated Mana's chat and vision onto one model after a same-day benchmark showed the chat model already beat both vision candidates outright, deleting a second model instead of picking between them.",
+    href: "/blog/the-vision-model-that-didnt-need-to-exist/",
   },
 ];
