@@ -1,0 +1,17 @@
+---
+title: The route that won by mounting first
+date: 2026-09-05
+summary: Mana's node-bot server had two implementations of the same addon-consent endpoint, and the older, unauthenticated one was winning every request. Fixing the mount order surfaced it clearly enough for CodeQL to flag 9 high-severity findings in it, so I deleted the file instead of patching it.
+tags: ["mana", "security", "debugging"]
+draft: false
+---
+
+Mana's dual-tier addon system needed a consent-gated install endpoint: standard plugins auto-approve, but "Advanced Add-ons" need the user to explicitly consent before their code loads. Two implementations of that endpoint existed at once. `server.js` had a newer, reviewed one, `pluginSettingsStore`-backed, built and hardened as part of issues #494-#496. `routes/addons.js` had an older one from issue #492, mounted separately as `registerAddonRoutes(app)`.
+
+Both answered to the same path, `/addons/consent/:id`. `server-routes.js` registered `registerAddonRoutes(app)` before `server.js` got to define its own `/addons/consent/:name` handlers. Express matches routes in registration order, first match wins, so every consent request was being served by the old router, not the new one. Nothing crashed. Nothing errored. It just silently ran the wrong code for months, and the only reason I caught it was that a test in `test/plugin-store-routes.test.js` expected the new handler's response shape and got the old one's instead. I moved the mount to register after the reviewed handlers, which was the whole fix at the time, a one-line reorder.
+
+Once that shadowing was gone, the old router in `routes/addons.js` was just dead weight sitting behind newer code, so I ran a CodeQL scan over it while I was in there. It came back with 9 high-severity findings, all coming from the same source: `req.params.id`, completely unsanitized, flowing into `path.join(__dirname, '../../addons', id, ...)` in every handler in the file. That's a path traversal in the manifest lookup, the install-status check, and the uninstall route alike. Worse, the POST `/consent/:id` handler took that same unvalidated `id` and passed it straight into a dynamic `import(addonPath)` (and, in the non-special-cased branch, a `require(addonPath)`) to load and execute whatever module lived there. No auth check gated any of it, unlike every other filesystem-touching route in `server.js`. An `id` of `../../../../whatever` would have resolved outside the addons directory entirely, and the loader would have run it.
+
+I didn't patch the nine injection points. The `/consent/:id` handler was now fully superseded by the correct one, and the file's other two routes, `GET`/`DELETE /addons/:id`, weren't called from anywhere else in the app. There was no live code path left to defend, so I deleted `routes/addons.js` outright, 218 lines gone, plus the six lines in `server-routes.js` and `server.js` that wired it in.
+
+What stays with me is that the mount-order bug and the security bug were the same bug looked at from two different points in time. Early on, the ordering mistake was invisible because both handlers looked equivalent from the outside; a test that checked response shape happened to catch it. Later, once the ordering was fixed, the exact same file that had just been silently running in production for months turned out to be the one CodeQL called high-severity nine times over. The router that "worked" and the router that was dangerous were the same fifteen lines the entire time.
