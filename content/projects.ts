@@ -417,6 +417,51 @@ export const projects: Project[] = [
     ],
     note: "Components 1 through 3, the rendering engine, the skin format, and the four bundled skins, are merged into main. Component 4, the manager application, is in progress on its own branch. Two components are still just a plan. I'm listing it now because the engineering that exists is real, not because the engine as a whole is finished.",
   },
+
+  {
+    slug: "hephastion",
+    name: "Hephastion",
+    kind: "Obsidian memory plugin",
+    blurb:
+      "A plugin that gives Hermes Desktop long-term memory in your own Obsidian vault, reading relevant notes into context and writing approved ones back as plain markdown.",
+    lede: "Hermes Desktop is a local AI chat app, and this plugin gives it memory that lives in a folder of your own Obsidian notes rather than inside a provider's account. The shipped half, Knowledge, reads relevant notes into a conversation and writes approved memories back afterward. The half being rebuilt, Creator, is a Claude-Artifacts equivalent for the same app: durable, versioned, live-previewed outputs instead of text that scrolls away.",
+    status: "Knowledge module shipped (v1); Creator rebuilding across three branches, not yet merged to main",
+    size: "regular",
+    metrics: [
+      { value: "99", label: "commits in the repo's first week" },
+      { value: "3", label: "of 4 Creator phases rebuilt, not yet merged to main" },
+    ],
+    stack: ["Python", "SQLite FTS5", "JavaScript", "React", "CodeMirror 6", "esbuild-wasm", "Tailwind CSS"],
+    problem: [
+      "A local chat app that forgets everything between sessions is only local in one sense. The obvious fix, a provider-hosted memory feature, moves the same lock-in problem from the model to the memory: the notes live in someone else's account, in a private format, until you no longer have the client that reads it. An Obsidian vault is a folder of plain markdown files with none of that, so it becomes the memory store instead.",
+      "Separately, a chat app that can talk but only ever produces scrollback has no equivalent to Claude's Artifacts: a durable output that persists, gets versioned, and can be a live-rendered React component instead of a wall of text. Creator is that surface, built as a second module in the same plugin.",
+    ],
+    architecture: [
+      "Knowledge has two directions. Read is a composer toggle: an SQLite FTS5 index searches the vault and prepends the relevant notes to a message before it is sent. Write is a command run after a conversation: the active model extracts candidate memories, you approve each one individually, and approved ones are appended under a note's `## History` section as a single dated bullet, byte-identical to a line typed by hand, no metadata and no markers, so the vault never grows a private format only this plugin understands.",
+      "Every write shows a diff first, keeps a `.bak` of the touched note, and a single command undoes the most recent batch. The whole plugin core is framework-free Python and JavaScript with no build step, and `selftest.py` runs every module's self-check plus a full HTTP read, write, and reversible round-trip.",
+      "Creator's design is four phases, each meant to be a working increment on its own: agent tools plus a persistent versioned store and a pane with a per-type preview for code, HTML, SVG, Markdown and Mermaid; a live React runtime that bundles an artifact and its imports through esbuild-wasm into a sandboxed iframe with per-artifact Tailwind; a real CodeMirror 6 editor plus standalone HTML export and Publish to Gist; and a `window.hermes` bridge that gives an artifact its own storage and file access.",
+      "An earlier attempt at Creator landed partway on main, including a first pass at the phase 4 bridge, before being pulled back out wholesale, keeping only the design docs. The current rebuild redid phases 1 through 3 in order across three sequential branches instead, each one a complete increment rather than another partial cut.",
+    ],
+    outcome: [
+      "Knowledge is real and shipped: the read and write paths both work against a live vault, and the self-test suite exercises the full round-trip rather than just importing the modules.",
+      "Creator is a substantial rebuild, not a stub: three phases and 47 commits since the restart, covering the versioned store, the agent tools, the sandboxed React runtime with Tailwind, the CodeMirror editor, and export and Gist publishing. None of it is merged to main yet, so it isn't claimed as shipped here.",
+      "The repository itself is named Hephastion on GitHub, but the plugin's own README, its install paths, and its folder name still say Hermes Workspace and hermes-workspace throughout. That rename hasn't finished propagating internally, which is worth stating plainly rather than smoothing over on this page.",
+    ],
+    lessons: [
+      {
+        title: "Half a feature on main is worse than a design doc",
+        body: "The first attempt at Creator got partway built, including an early cut of the last phase, directly on the branch everyone else builds from. Pulling all of it back out and keeping only the design docs was the actual fix, not a patch on top. The rebuild that followed shipped each phase as something complete in itself instead of leaving another half-finished cut sitting in the default branch.",
+      },
+      {
+        title: "Durable memory means writing in the user's own format",
+        body: "An approved memory is appended as one plain dated bullet under a heading, with no metadata and no marker distinguishing it from something typed by hand. The tempting version tags its own writes for easier programmatic review later. The shipped version chose to be invisible in the vault instead, because the whole point of an Obsidian vault as memory is that it stays a normal vault.",
+      },
+    ],
+    links: [
+      { label: "Source on GitHub", href: "https://github.com/Yuuzulight/Hephastion", kind: "code" },
+    ],
+    note: "Knowledge is shipped and real. Creator is a genuine, substantial rebuild in progress across branches, not yet merged to main, so it isn't claimed as finished here. The project's own README hasn't caught up to the GitHub rename yet either, still calling itself Hermes Workspace throughout its own install instructions.",
+  },
 ];
 
 export function getProject(slug: string): Project | undefined {
