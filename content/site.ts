@@ -141,6 +141,11 @@ export type Update = {
 // five entries is plenty.
 export const updates: Update[] = [
   {
+    date: "2026-09-04",
+    text: "Evaluating a lighter browser engine for Mana's automation plugin found real memory savings, 15x lower RSS, but also found the existing test suite couldn't have measured that at all, plus two correctness bugs in the two functions the plugin depends on most.",
+    href: "/blog/the-engine-swap-that-won-on-memory-and-lost-on-two-functions/",
+  },
+  {
     date: "2026-09-03",
     text: "A correct SSRF hostname guard in Mana's plugin store failed CodeQL's scan through three rewrites before a plain === chain instead of Set.has() finally moved it; a path-traversal check in the same file needed the same exact-shape fix.",
     href: "/blog/the-ssrf-check-that-codeql-refused-to-recognize/",
@@ -159,10 +164,5 @@ export const updates: Update[] = [
     date: "2026-08-23",
     text: "Mana's coding-agent test runner now executes against a scratch copy instead of the live workspace. My first cut of the node_modules junction only checked the workspace root, which would have silently broken every real test run against this exact repo.",
     href: "/blog/the-scratch-copy-that-only-checked-the-top-level/",
-  },
-  {
-    date: "2026-08-21",
-    text: "Consolidated Mana's chat and vision onto one model after a same-day benchmark showed the chat model already beat both vision candidates outright, deleting a second model instead of picking between them.",
-    href: "/blog/the-vision-model-that-didnt-need-to-exist/",
   },
 ];
