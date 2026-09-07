@@ -141,6 +141,11 @@ export type Update = {
 // five entries is plenty.
 export const updates: Update[] = [
   {
+    date: "2026-09-07",
+    text: "Mana's snapshot staleness check compared millisecond timestamps as strings, so two snapshots written in the same millisecond, routine for back-to-back in-memory writes, tied and a genuinely newer write could slip past unflagged.",
+    href: "/blog/the-staleness-check-that-couldnt-tell-two-writes-apart/",
+  },
+  {
     date: "2026-09-04",
     text: "Evaluating a lighter browser engine for Mana's automation plugin found real memory savings, 15x lower RSS, but also found the existing test suite couldn't have measured that at all, plus two correctness bugs in the two functions the plugin depends on most.",
     href: "/blog/the-engine-swap-that-won-on-memory-and-lost-on-two-functions/",
@@ -159,10 +164,5 @@ export const updates: Update[] = [
     date: "2026-08-24",
     text: "windows-launcher's main window disabled Chromium's background throttling to keep the avatar smooth while unfocused, but that flag stayed off even once the window was genuinely hidden, which it is by default on every startup.",
     href: "/blog/the-throttle-that-forgot-the-window-could-hide/",
-  },
-  {
-    date: "2026-08-23",
-    text: "Mana's coding-agent test runner now executes against a scratch copy instead of the live workspace. My first cut of the node_modules junction only checked the workspace root, which would have silently broken every real test run against this exact repo.",
-    href: "/blog/the-scratch-copy-that-only-checked-the-top-level/",
   },
 ];
