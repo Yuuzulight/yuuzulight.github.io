@@ -141,6 +141,11 @@ export type Update = {
 // five entries is plenty.
 export const updates: Update[] = [
   {
+    date: "2026-09-08",
+    text: "Mana's Node.js fetch script's SHA256 check threw a PositionalParameterNotFound error on every single run from an unparenthesized [regex]::Escape() call, got silently caught, and logged a warning indistinguishable from a real hash mismatch while the build proceeded on an unverified binary regardless.",
+    href: "/blog/the-sha256-check-that-never-actually-ran/",
+  },
+  {
     date: "2026-09-04",
     text: "Evaluating a lighter browser engine for Mana's automation plugin found real memory savings, 15x lower RSS, but also found the existing test suite couldn't have measured that at all, plus two correctness bugs in the two functions the plugin depends on most.",
     href: "/blog/the-engine-swap-that-won-on-memory-and-lost-on-two-functions/",
@@ -159,10 +164,5 @@ export const updates: Update[] = [
     date: "2026-08-24",
     text: "windows-launcher's main window disabled Chromium's background throttling to keep the avatar smooth while unfocused, but that flag stayed off even once the window was genuinely hidden, which it is by default on every startup.",
     href: "/blog/the-throttle-that-forgot-the-window-could-hide/",
-  },
-  {
-    date: "2026-08-23",
-    text: "Mana's coding-agent test runner now executes against a scratch copy instead of the live workspace. My first cut of the node_modules junction only checked the workspace root, which would have silently broken every real test run against this exact repo.",
-    href: "/blog/the-scratch-copy-that-only-checked-the-top-level/",
   },
 ];
