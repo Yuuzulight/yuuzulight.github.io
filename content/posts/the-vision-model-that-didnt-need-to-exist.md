@@ -46,7 +46,7 @@ has no caller yet, so that stays open as issue #439 instead of becoming code.
 What sticks with me is that I'd already closed the vision decision that morning, with a
 trade-off that made sense given what I'd checked. It would have shipped as final if I
 hadn't happened to benchmark that same chat model again, a few hours later, for something
-else entirely. The first swap wasn't wrong given what I knew going in; it was incomplete
-given a question I hadn't thought to ask yet, whether the model already running for chat
-had quietly made the whole second model unnecessary. A model upgrade is worth re-testing
-against, not just choosing between the alternatives already on the table.
+else entirely. Nothing about the first swap was wrong going in. I just hadn't thought to
+ask whether the model already running for chat had quietly made the whole second model
+unnecessary. A model upgrade is worth re-testing against, not just choosing between the
+alternatives already on the table.
