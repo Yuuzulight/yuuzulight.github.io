@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     template: "%s | Yuuzu",
   },
   description:
-    "Data and AI engineering portfolio. Repository intelligence on Kubernetes, a fine-tuned text classifier serving live traffic, and a guest messaging platform in production.",
+    "Data and AI engineering portfolio. Repository intelligence running daily on AWS, a fine-tuned text classifier and the harness that tested it, and a guest messaging platform in production.",
   openGraph: {
     title: "Yuuzu, data and AI engineering",
     description:

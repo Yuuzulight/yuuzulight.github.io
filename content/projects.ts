@@ -52,7 +52,7 @@ export const projects: Project[] = [
     blurb:
       "Tracks which software projects are actually growing, and answers plain-English questions about the trends, grounded in SQL against its own warehouse rather than a similarity search.",
     lede: "Star counts are a bad proxy for whether a project is alive. Hecate collects repository and package data from four sources, collects discussion from two more, and keeps a daily snapshot so growth can be measured rather than guessed. A forecasting stage predicts where a repository is headed next, and a question-answering service on top answers plain-English questions about the whole warehouse.",
-    status: "v2.0.0, running unattended on a daily schedule, RAG-backed Q&A verified live",
+    status: "v2.1.0, running daily on AWS (Sydney) since 14 October 2026, RAG-backed Q&A behind sign-in",
     size: "wide",
     // Repositories tracked per daily snapshot, 7-20 Aug 2026 -- the same
     // series charted in the momentum post, reused rather than re-derived.
@@ -66,11 +66,15 @@ export const projects: Project[] = [
       "Python",
       "PostgreSQL",
       "dbt",
-      "Kubernetes",
+      "AWS ECS Fargate",
+      "Aurora PostgreSQL",
+      "Lambda and API Gateway",
+      "Cognito",
+      "Terraform",
+      "Valkey",
       "Docker",
       "Prometheus",
       "Grafana",
-      "Redis",
       "FastAPI",
       "LangChain",
     ],
@@ -85,11 +89,12 @@ export const projects: Project[] = [
       "Every tracked project is snapshotted daily. That table is the only history in the system, and it is the only reason growth can be measured at all, because everything else describes the present and upserts in place.",
       "dbt turns the raw tables into staging views, then facts, dimensions, growth and momentum models: nine models backed by fifty-four tests. Grafana reads the result across 21 panels, Prometheus watches the jobs, and alerts fire when a run does not land.",
       "A forecasting stage predicts each repository's star count a week out, gated by a confidence check so a forecast that has not cleared the bar is written as NULL rather than shown as if it were real, with its own backtest tool that checks predictions against what actually happened.",
-      "A question-answering service sits on top, provider-selectable across Gemini, Anthropic and OpenAI. Answers are built from SQL against the analytics models rather than a similarity search, since the questions people ask are aggregates and the whole corpus is small enough that picking the right rows beats finding similar ones. Every citation is checked against what the model was actually shown before it reaches the caller, and an evaluation harness scores whether the answer is grounded at all.",
+      "Since 14 October 2026 production runs on AWS in Sydney rather than on a machine at home. EventBridge Scheduler starts one ECS Fargate batch each day at 04:00 Singapore time: it extracts, runs dbt, refreshes embeddings, launches an on-demand TimesFM forecast task, and writes a PostgreSQL backup to a private S3 bucket. The warehouse is Aurora PostgreSQL Express, embeddings live in Valkey Serverless (IAM auth and TLS), and the question-answering API runs on Lambda and API Gateway behind Cognito. The infrastructure is Terraform, and a check on the day of the move found no drift. The earlier Docker Desktop Kubernetes setup is kept as a rollback path.",
+      "A question-answering service sits on top, provider-selectable across Gemini, Anthropic and OpenAI when run locally. Answers are built from SQL against the analytics models rather than a similarity search, since the questions people ask are aggregates and the whole corpus is small enough that picking the right rows beats finding similar ones. Every citation is checked against what the model was actually shown before it reaches the caller, and an evaluation harness scores whether the answer is grounded at all.",
     ],
     outcome: [
-      "The platform reached v2.0.0. All six sources collect, dbt rebuilds the models daily, and the whole thing runs unattended with alerting and nightly backups. The Grafana dashboard now exposes 21 panels on anonymous read, up from the 15 it shipped with, including a forecast panel for the newest stage.",
-      "The question-answering service is deployed with all three providers verified end to end, env vars, auth, request routing, and the Anthropic path has cleared a full evaluation run against real production data: 0.92 mean faithfulness and zero hallucinations across a fixed question set, graded by a second model call rather than self-reported.",
+      "The platform is at v2.1.0. All six sources collect, dbt rebuilds the models daily, and the whole thing runs unattended on AWS with nightly backups to S3. As of 14 October 2026 the cloud warehouse holds 2,360 repositories across 65 snapshot days and 5,675 mentions, and the live forecast run produced 100 forecast rows across 50 repositories, with 20 more suppressed for insufficient history. The Grafana dashboard now exposes 21 panels on anonymous read, up from the 15 it shipped with, including a forecast panel for the newest stage.",
+      "The deployed question-answering API uses OpenAI gpt-5-mini with minimal reasoning, behind a shared limit of 50 questions per UTC day, 2 requests per second and 500-character questions. The only full evaluation, 0.92 mean faithfulness and zero hallucinations on 12 fixed questions on 14 August 2026, graded by a second model call, was run with Anthropic. The production gpt-5-mini path has not been evaluated separately.",
     ],
     lessons: [
       {
@@ -115,9 +120,9 @@ export const projects: Project[] = [
     name: "Veritarach",
     kind: "Fine-tuned AI-text detector",
     blurb:
-      "A DeBERTa-v3 classifier that separates AI-written text from human text, deployed as a live service and registered on-chain as an inference node.",
-    lede: "A binary text classifier fine-tuned from microsoft/deberta-v3-base, trained on a dataset I built, deployed behind HTTPS on a real server, and registered on a decentralised inference protocol. Then I built a separate harness to check whether the headline number actually meant anything.",
-    status: "Live and serving, registered as an active node",
+      "A DeBERTa-v3 classifier that separates AI-written text from human text, deployed as a live service and registered on-chain as an inference node for Telegraph Hackathon Season 1, retired once the hackathon ended.",
+    lede: "A binary text classifier fine-tuned from microsoft/deberta-v3-base, trained on a dataset I built, deployed behind HTTPS on a real server, and registered on a decentralised inference protocol. Then I built a separate harness to check whether the headline number actually meant anything. The server came down on 9 September 2026, once the hackathon it was built for was over.",
+    status: "Retired 9 September 2026 after Telegraph Hackathon Season 1 ended; code and results stand",
     size: "tall",
     metrics: [
       { value: "96,646", label: "rows in the training set" },
@@ -141,14 +146,15 @@ export const projects: Project[] = [
       "The data pipeline handles fetching, generation and splitting. Sample generation tracks spend against a budget and writes a manifest, so an interrupted run resumes instead of restarting and re-billing.",
       "Splitting uses a group-aware strategy from scikit-learn, because HC3's human and AI answers come in pairs. A naive random split puts one half of a pair in train and the other in test, and the resulting score measures leakage rather than learning.",
       "Training ran on rented GPUs across three runs, under $1.20 in total compute: an early NaN-loss run while debugging precision handling, a second run that silently trained without a GPU at all because a driver/CUDA mismatch made torch.cuda.is_available() report False, and a third run on a compatible instance that converged normally.",
-      "Serving is a FastAPI application in a Docker container on a DigitalOcean droplet, with Caddy terminating TLS and pulling certificates from Let's Encrypt automatically.",
+      "Serving ran as a FastAPI application in a Docker container on a DigitalOcean droplet, with Caddy terminating TLS and pulling certificates from Let's Encrypt automatically. That droplet was deleted on 9 September once the hackathon ended, so the responses shown on this page are from while it was live, not a service you can query today.",
       "Registration on the protocol meant setting up an EVM wallet, funding it on a testnet, and submitting an on-chain transaction to activate the service as a node for the text-detection intent.",
     ],
     outcome: [
-      "The model reports 99.86% F1 on its own held-out test set, and the deployed service is registered and active on the protocol. I verified the registration by querying the protocol's own backend and checking the wallet's transaction nonce, rather than trusting the success message the tooling returned.",
+      "The model reports 99.86% F1 on its own held-out test set, and while it was live the deployed service was registered and active on the protocol. I verified the registration by querying the protocol's own backend and checking the wallet's transaction nonce, rather than trusting the success message the tooling returned.",
       "That 99.86% is from the second training run, not the first. The checkpoint originally deployed had silently trained without a GPU at all: a driver only supported CUDA 12.4 while the pinned PyTorch build defaulted to a CUDA 13 wheel, so torch.cuda.is_available() returned False and training proceeded on CPU thinking it had an accelerator, with no metrics saved to catch it. Confidence never left roughly a 0.5-0.7 band, even on the opening line of Pride and Prejudice. Loading the deployed checkpoint directly and testing it against unambiguous input caught it; a retrain on a compatible instance converged normally and was verified three separate ways before redeploy: the saved test metrics, ten sampled held-out rows scored straight from the checkpoint, and six requests against the live redeployed endpoint.",
       "Then I built Veracia, a separate evaluation harness with an independently constructed holdout, and pointed it at the live deployment. It found that the score does not survive contact with text outside the training distribution: recall dropped to 0.042, catching one of 24 AI samples, and the 23 misses were returned as human with 0.98 or higher confidence. Across a wider cross-model set, 38 of 100 clearly-AI samples came back as human.",
       "The model had learned a narrower rule than the metric implied, roughly \"call it human unless it looks like the training data\". That is a real result about the project, and it is the reason the F1 figure on this page is always stated against its own split.",
+      "The droplet was deleted on 9 September 2026, the day Telegraph Hackathon Season 1 ended, and Terraform was never told: its state file still records the droplet as active at its old IP. Rather than take that on faith, I checked the address directly and got a timeout on a connection that reaches everything else fine, so the shutdown is confirmed, not assumed. Whether the on-chain registration still reads active for a server that no longer exists is a separate, unresolved question this repo doesn't track.",
     ],
     lessons: [
       {
@@ -163,11 +169,16 @@ export const projects: Project[] = [
         title: "A high score is a claim, not a conclusion",
         body: "Shipping at 99.86% and stopping would have been the easy path, and the number would have been technically true the whole time. Building the thing that could disprove it is what turned a metric into an actual understanding of what the model does.",
       },
+      {
+        title: "A state file only knows what you tell it",
+        body: "Terraform's config for this droplet was written carefully, right down to leaving ssh_keys unset because setting a mismatched value risked a forced destroy-and-recreate of a live, registered node. All of that care assumed the droplet would only ever change through Terraform. Deleting it directly instead, once the hackathon was over, left the state file confidently wrong: it still says active, at an address that times out. The tool that's supposed to be the source of truth about infrastructure is only ever a record of the last thing it was told, not a live view of what's actually there.",
+      },
     ],
     links: [
       { label: "Source on GitHub", href: "https://github.com/Yuuzulight/Veritarach", kind: "code" },
       { label: "Veracia, the evaluation harness", href: "https://github.com/Yuuzulight/Veracia", kind: "code" },
     ],
+    note: "This was a live, queryable service through Telegraph Hackathon Season 1. The DigitalOcean droplet was deleted on 9 September 2026 once the hackathon ended, so there is no live endpoint to try anymore. The code, the training pipeline, and the Veracia evaluation results are all still real and unchanged. The interactive samples below are recordings from while it was live, not a live call.",
   },
 
   {
@@ -461,6 +472,118 @@ export const projects: Project[] = [
       { label: "Source on GitHub", href: "https://github.com/Yuuzulight/Hephastion", kind: "code" },
     ],
     note: "Knowledge is shipped and real. Creator is a genuine, substantial rebuild in progress across branches, not yet merged to main, so it isn't claimed as finished here. The project's own README hasn't caught up to the GitHub rename yet either, still calling itself Hermes Workspace throughout its own install instructions.",
+  },
+
+  {
+    slug: "folio",
+    name: "Folio Artifacts",
+    kind: "HTML rendering engine for .NET",
+    blurb:
+      "A lightweight HTML/CSS rendering engine written from scratch in C#, built to render and run AI-written HTML artifacts inside Mana's own window. It is an artifact-focused renderer, not a complete browser.",
+    lede: "Mana writes HTML artifacts such as reports, tables, charts and small interactive pages, and needs somewhere light to show them. Folio Artifacts draws them natively with SkiaSharp inside the host application, as a WinForms control with a headless render-to-image API alongside it. Anything it cannot handle yet opens in the system browser.",
+    status: "Milestones 1 to 5 delivered (5 on a dependency-backed path); milestone 6 in progress",
+    size: "regular",
+    metrics: [
+      { value: "5", label: "of 7 numbered milestones delivered" },
+      { value: "45", label: "open issues in milestone 6, still in progress" },
+    ],
+    stack: ["C#", ".NET 10", "SkiaSharp", "HarfBuzzSharp", "WinForms"],
+    problem: [
+      "Mana's native launcher is designed to stay light on memory, which rules out embedding a full Chromium just to show an artifact. Free C# engines with modern CSS exist, but none is an interactive on-screen control, which is the gap this fills.",
+      "The goal is narrower than a browser on purpose: no address bar, tabs, logins or extensions, and none of the web platform that artifacts do not use.",
+    ],
+    architecture: [
+      "Parsing, the cascade, block, inline, flex and grid layout, text and painting are Folio's own code, drawn through SkiaSharp. Complex-script shaping, the JavaScript engine and the 2D graphics library stay dependencies behind Folio's own interfaces so they can be replaced later.",
+      "Scripts run sandboxed with strict limits in a separate content process, and nothing touches the network unless the host allows it.",
+      "Progress is measured against a conformance suite of realistic artifacts, a fuzzer over the parsers and decoders, and a benchmark harness with memory targets.",
+    ],
+    outcome: [
+      "Milestones 1 to 5 are delivered: static rendering, static parity, interaction, scripting foundations, and scripted parity. Milestone 5 is delivered on the dependency-backed path, not with everything built in-house. Mana's native launcher already draws its HTML artifacts with Folio.",
+      "Milestone 6 (WebGL, audio and video, workers, WebAssembly, iframes, service workers and WebRTC) is in progress. Its acceptance audit lists GPU/GLSL execution, media playback, native WebAssembly, capture and transport, and service-worker isolation as unfinished.",
+    ],
+    lessons: [
+      {
+        title: "A completion claim needs an audit behind it",
+        body: "Earlier claims that milestone 6 was complete were premature. The README now says so, and the milestone is marked in progress until the acceptance audit's gaps are closed.",
+      },
+    ],
+    links: [
+      { label: "Source on GitHub", href: "https://github.com/Yuuzulight/Folio", kind: "code" },
+    ],
+    note: "This project was called Folio Browser until 1 October 2026. The repository, packages and namespaces are still named Folio.",
+  },
+
+  {
+    slug: "arcana",
+    name: "Arcana",
+    kind: "Agent-focused browser runtime",
+    blurb:
+      "A lightweight browser runtime for Mana's browser automation: a native CLI, MCP server and .NET API wrapped around a pinned, patched build of the Obscura engine.",
+    lede: "Mana's browser automation originally drove a locally installed Chrome or Edge through Playwright. Arcana gives it a self-contained runtime instead, with an engine-neutral page contract (page API v1) so the engine behind it can change without changing the caller. The engine today is Obscura by h4ckf0r0day, built from a pinned upstream commit with four small patches applied.",
+    status: "Early: native CLI, all 37 MCP tools and the .NET API work; being integrated into Mana",
+    size: "regular",
+    metrics: [
+      { value: "37", label: "MCP browser tools exposed" },
+      { value: "4", label: "patches carried on top of the pinned engine" },
+    ],
+    stack: ["C#", ".NET 10", "Rust (engine build)", "CDP", "MCP"],
+    problem: [
+      "A browser automation plugin that depends on a full Chromium install costs hundreds of megabytes of memory, can leave orphaned processes behind, and ties the caller to one vendor's debugging protocol.",
+    ],
+    architecture: [
+      "The engine is built from a pinned Obscura commit recorded in a lock file, with each patch checked against a digest before it is applied. The patches add child-frame support for debugging-protocol clients, multipart form uploads, re-announced frames when a document changes, and frames that follow their own links.",
+      "Arcana owns the host and integration layer: it starts the engine under process containment, exposes the native CLI and the MCP tools, and offers a .NET API for pages, forms, input, capture, storage and tabs. It is not an independent renderer.",
+      "Page API v1 is engine-neutral. Folio is a possible future engine behind the same contract; that is planned work, not something that exists yet.",
+    ],
+    outcome: [
+      "Arcana exposes the native CLI, all 37 MCP tools and the CDP surface of the pinned engine revision, and its parity matrix lists the verified limits. Integration into Mana is in progress.",
+    ],
+    lessons: [
+      {
+        title: "Pin the engine, patch it in the open",
+        body: "Keeping the engine as a pinned upstream commit plus numbered patches, each checked by digest, makes it clear which behaviour is upstream's and which is Arcana's, and keeps the credit where it belongs.",
+      },
+    ],
+    links: [
+      { label: "Source on GitHub", href: "https://github.com/Yuuzulight/Arcana", kind: "code" },
+      { label: "Obscura, the upstream engine", href: "https://github.com/h4ckf0r0day/obscura", kind: "code" },
+    ],
+    note: "The browser engine is Obscura, by h4ckf0r0day, licensed Apache-2.0. Arcana does not include it in the repository; it builds it from a pinned commit and applies its own patches.",
+  },
+
+  {
+    slug: "gradcompass",
+    name: "GradCompass",
+    kind: "Resume-to-job match scoring",
+    blurb:
+      "A web app that scores how well a resume matches a job posting, aimed at new graduates and career switchers whose resumes are thin or non-traditional.",
+    lede: "Applicant tools tend to assume a conventional resume. GradCompass is for people without one: bootcamp graduates, internship-only candidates, career changers and the self-taught, in any field. It scores a resume against a posting with a language model and shows where the match is weak.",
+    status: "Live at gradcompass.co",
+    size: "regular",
+    metrics: [
+      { value: "1", label: "developer, no team" },
+    ],
+    stack: ["Next.js", "TypeScript", "Supabase", "Netlify", "Cloudflare Turnstile", "Sentry"],
+    problem: [
+      "Most scoring tools are tuned for candidates with a long, conventional work history, and give little to someone whose experience is a bootcamp, an internship or a different industry.",
+    ],
+    architecture: [
+      "Scoring runs through a primary language model with a second as fallback. A free local pre-filter rejects junk input, such as text that is too short, an identical resume and posting, or repetitive spam, before Turnstile or any paid model call.",
+      "Sign-in is by emailed one-time code or Google and LinkedIn, backed by Supabase. Errors are captured with Sentry, and traffic is counted by a first-party, cookie-free analytics table.",
+    ],
+    outcome: [
+      "The site is public at gradcompass.co and payments are enabled. There is no revenue figure to report.",
+    ],
+    lessons: [
+      {
+        title: "Reject the cheap cases before paying for the expensive ones",
+        body: "Putting a free input check in front of the bot check and the model call means obvious junk never costs anything.",
+      },
+    ],
+    links: [
+      { label: "gradcompass.co", href: "https://gradcompass.co", kind: "live" },
+    ],
+    note: "The source lives in a private repository, so there is no public code link for this one.",
   },
 ];
 
